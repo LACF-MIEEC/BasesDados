@@ -17,6 +17,10 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+private slots:
+    void loggedIn();
+
 };
 
 #endif // MAINWINDOW_H

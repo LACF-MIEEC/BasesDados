@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT       += sql widgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -26,15 +27,24 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    startwindow.cpp \
+    qsqlconnectiondialog.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    startwindow.h \
+    qsqlconnectiondialog.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    startwindow.ui \
+    qsqlconnectiondialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    resources.qrc

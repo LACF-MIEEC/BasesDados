@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/Icons">
+        <file alias="DBSettingsLogo">resources/icons/DatabaseSettings.png</file>
+        <file alias="UserPic">resources/icons/userPic.png</file>
+    </qresource>
+    <qresource prefix="/Logos">
+        <file alias="MusicLogo">resources/logos/MusicLogo.png</file>
+        <file alias="MusicLogoOrange">resources/logos/MusicLogoOrange.png</file>
+    </qresource>
+</RCC>
