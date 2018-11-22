@@ -12,11 +12,24 @@ StartWindow::StartWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    QFile file("UserCredentials.txt");
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        QTextStream in(&file);
+        QStringList cred;
+
+        while (!in.atEnd()) {
+            cred.append(in.readLine());
+        }
+
+        ui->UserNameEdit->setText(cred.at(0));
+        ui->PasswordEdit->setText(cred.at(1));
+    }
 }
 
 StartWindow::~StartWindow()
 {
     delete ui;
+
 }
 
 void StartWindow::on_LogInButton_clicked()
@@ -56,9 +69,18 @@ void StartWindow::on_LogInButton_clicked()
 
 
     if(ui->RememberCheck->isChecked()){
-        //Save Credentials into file?
+        QFile file("UserCredentials.txt");
+        if (file.open(QIODevice::WriteOnly | QIODevice::Text))
+        {
+            QTextStream out(&file);
+            out << username << "\n" << password;
+        }
     }
 
+    query.finish();
+    query.clear();
+
+    this->acceptedUser(username);
     this->accept();
 }
 
@@ -92,9 +114,14 @@ void StartWindow::on_DBSettings_clicked()
         QSqlDatabase::removeDatabase(db.connectionName());
         if (err.type() != QSqlError::NoError)
             QMessageBox::warning(this, tr("Unable to open database"), tr("An error occurred while "
-                                       "opening the connection: ") + err.text());
+                                                                         "opening the connection: ") + err.text());
     }
     // Save setting to file
 
 
+}
+
+QString StartWindow::userName() const
+{
+    return ui->UserNameEdit->text();
 }

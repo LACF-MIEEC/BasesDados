@@ -18,8 +18,15 @@ public:
 private:
     Ui::MainWindow *ui;
 
+    QString currentUser;
+
+
 private slots:
-    void loggedIn();
+    void loggedIn(QString);
+    void closeEvent(QCloseEvent *event);
+
+
+
 
 };
 

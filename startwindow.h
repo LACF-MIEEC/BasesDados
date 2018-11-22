@@ -15,12 +15,17 @@ public:
     explicit StartWindow(QWidget *parent = nullptr);
     ~StartWindow();
 
+signals:
+    void acceptedUser(QString username);
+
 private slots:
     void on_LogInButton_clicked();
 
     void on_RegisterButton_clicked();
 
     void on_DBSettings_clicked();
+
+    QString userName() const;
 
 private:
     Ui::StartWindow *ui;
