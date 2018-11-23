@@ -26,3 +26,8 @@ void MainWindow::on_MyProfile_clicked()
     sw.setModal(true);
     sw.exec();
 }
+
+void MainWindow::on_MyProfile_hover(){
+
+
+}

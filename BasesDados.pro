@@ -31,14 +31,16 @@ SOURCES += \
     qsqlconnectiondialog.cpp \
     register.cpp \
     myprofile.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    qhoversensitivebutton.cpp
 
 HEADERS += \
     startwindow.h \
     qsqlconnectiondialog.h \
     register.h \
     myprofile.h \
-    mainwindow.h
+    mainwindow.h \
+    qhoversensitivebutton.h
 
 FORMS += \
     startwindow.ui \

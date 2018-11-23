@@ -227,7 +227,7 @@
     <string>Welcome!</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="MyProfile">
+  <widget class="QHoverSensitiveButton" name="MyProfile">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -296,7 +296,7 @@ background-repeat: none;
     <string>My Profile</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="Quit">
+  <widget class="QHoverSensitiveButton" name="Quit">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -365,7 +365,7 @@ background-repeat: none;
     <string>Quit</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="UploadMusic">
+  <widget class="QHoverSensitiveButton" name="UploadMusic">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -434,7 +434,7 @@ background-repeat: none;
     <string>Upload Music</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="PlayLists">
+  <widget class="QHoverSensitiveButton" name="PlayLists">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -505,7 +505,7 @@ background-repeat: none;
     <string>PlayLists</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="Search">
+  <widget class="QHoverSensitiveButton" name="Search">
    <property name="geometry">
     <rect>
      <x>65</x>
@@ -575,6 +575,13 @@ background-repeat: none;
    </property>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QHoverSensitiveButton</class>
+   <extends>QPushButton</extends>
+   <header>qhoversensitivebutton.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
