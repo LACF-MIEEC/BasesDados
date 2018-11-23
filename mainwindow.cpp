@@ -26,17 +26,17 @@ MainWindow::MainWindow(QWidget *parent) :
     QString DBpasswd;
 
     // Load setting from file
+    // if not available use default
+    DBdriver  = "QPSQL";
+    DBname    = "postgres";
+    DBhost    = "localhost";
+    DBport    = 5432;
+    DBuser    = "postgres";
+    DBpasswd  = "postgres";
+
     QFile file("DatabaseSettings.txt");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        // if not available use default
-        DBdriver  = "QPSQL";
-        DBname    = "postgres";
-        DBhost    = "localhost";
-        DBport    = 5432;
-        DBuser    = "postgres";
-        DBpasswd  = "postgres";
-    }
-    else{
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
 
         QTextStream in(&file);
         QStringList settings;
@@ -44,13 +44,16 @@ MainWindow::MainWindow(QWidget *parent) :
         while (!in.atEnd()) {
             settings.append(in.readLine());
         }
+        if(settings.size() == 5){
 
-        DBdriver  = settings.at(0);
-        DBname    = settings.at(1);
-        DBhost    = settings.at(2);
-        DBport    = settings.at(3).toInt();
-        DBuser    = settings.at(4);
-        DBpasswd  = settings.at(5);
+            DBdriver  = settings.at(0);
+            DBname    = settings.at(1);
+            DBhost    = settings.at(2);
+            DBport    = settings.at(3).toInt();
+            DBuser    = settings.at(4);
+            DBpasswd  = settings.at(5);
+        }
+        file.close();
     }
 
 
@@ -68,6 +71,8 @@ MainWindow::MainWindow(QWidget *parent) :
             QMessageBox::warning(this, tr("Unable to open database"), tr("An error occurred while "
                                                                          "opening the connection: ") + err.text());
     }
+
+    currentUser.clear();
 
     StartWindow *sw = new StartWindow(this);
     connect(sw,SIGNAL(acceptedUser(QString)),this,SLOT(loggedIn(QString)));
@@ -117,28 +122,28 @@ void MainWindow::closeEvent(QCloseEvent *event)
     if (resBtn != QMessageBox::Yes) {
         event->ignore();
     } else {
+        if(currentUser.isEmpty()){
+            QSqlQuery query;
+            QDateTime timestamp;
+            // Get Timestamp
+            query.prepare("SELECT current_timestamp");
+            query.exec();
+            query.next();
+            timestamp = query.value(0).toDateTime();
+            qDebug() << "Logoff Date: " << timestamp;
 
-        QSqlQuery query;
-        QDateTime timestamp;
-        // Get Timestamp
-        query.prepare("SELECT current_timestamp");
-        query.exec();
-        query.next();
-        timestamp = query.value(0).toDateTime();
-        qDebug() << "Logoff Date: " << timestamp;
+            query.prepare("INSERT INTO registoacesso (data, tipoacesso, utilizador_nick) VALUES (:data, :tipoacesso, :utilizador_nick)");
+            query.bindValue(":data", timestamp);
+            query.bindValue(":tipoacesso", "LogOff");
+            query.bindValue(":utilizador_nick", currentUser);
 
-        query.prepare("INSERT INTO registoacesso (data, tipoacesso, utilizador_nick) VALUES (:data, :tipoacesso, :utilizador_nick)");
-        query.bindValue(":data", timestamp);
-        query.bindValue(":tipoacesso", "LogOff");
-        query.bindValue(":utilizador_nick", currentUser);
+            if(!query.exec()){
+                qDebug() << "ERROR: " << query.lastError();
+            }
 
-        if(!query.exec()){
-            qDebug() << "ERROR: " << query.lastError();
+            query.finish();
+            query.clear();
         }
-
-        query.finish();
-        query.clear();
-
         QSqlDatabase::database().close();
         QSqlDatabase::removeDatabase(QSqlDatabase::database().connectionName());
 

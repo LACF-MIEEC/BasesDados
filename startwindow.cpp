@@ -12,6 +12,8 @@ StartWindow::StartWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    this->setWindowFlag(Qt::SplashScreen);
+
     QFile file("UserCredentials.txt");
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)){
         QTextStream in(&file);
@@ -21,9 +23,16 @@ StartWindow::StartWindow(QWidget *parent) :
             cred.append(in.readLine());
         }
 
-        ui->UserNameEdit->setText(cred.at(0));
-        ui->PasswordEdit->setText(cred.at(1));
+        if(cred.size() == 2){
+
+            ui->UserNameEdit->setText(cred.at(0));
+            ui->PasswordEdit->setText(cred.at(1));
+
+            ui->RememberCheck->setChecked(true);
+        }
+        file.close();
     }
+
 }
 
 StartWindow::~StartWindow()
@@ -35,8 +44,8 @@ StartWindow::~StartWindow()
 void StartWindow::on_LogInButton_clicked()
 {
     // Check for username and password
-    QString username = ui->UserNameEdit->text();
-    QString password = ui->PasswordEdit->text();
+    QString username = userName();
+    QString password = passWord();
     if(username.isEmpty() || password.isEmpty()){
         QMessageBox::information(this, tr("User and Password Required"),
                                  tr("To Login you must provide a username and a password!"));
@@ -68,12 +77,20 @@ void StartWindow::on_LogInButton_clicked()
     }
 
 
-    if(ui->RememberCheck->isChecked()){
+    if(saveCredentialsSet()){
         QFile file("UserCredentials.txt");
         if (file.open(QIODevice::WriteOnly | QIODevice::Text))
         {
             QTextStream out(&file);
             out << username << "\n" << password;
+            file.close();
+        }
+
+    } else {
+        QFile file("UserCredentials.txt");
+        if (file.open(QIODevice::WriteOnly | QIODevice::Text))
+        {
+            file.close();
         }
     }
 
@@ -116,7 +133,21 @@ void StartWindow::on_DBSettings_clicked()
             QMessageBox::warning(this, tr("Unable to open database"), tr("An error occurred while "
                                                                          "opening the connection: ") + err.text());
     }
-    // Save setting to file
+
+    QFile file("DatabaseSettings.txt");
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)){
+
+
+            QTextStream out(&file);
+            out << dialog.driverName() << "\n"
+                << dialog.databaseName() << "\n"
+                << dialog.hostName() << "\n"
+                << dialog.port() << "\n"
+                << dialog.userName() << "\n"
+                << dialog.password();
+
+            file.close();
+    }
 
 
 }
@@ -124,4 +155,12 @@ void StartWindow::on_DBSettings_clicked()
 QString StartWindow::userName() const
 {
     return ui->UserNameEdit->text();
+}
+QString StartWindow::passWord() const
+{
+    return ui->PasswordEdit->text();
+}
+bool StartWindow::saveCredentialsSet() const
+{
+    return ui->RememberCheck->isChecked();
 }

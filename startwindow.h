@@ -27,6 +27,10 @@ private slots:
 
     QString userName() const;
 
+    QString passWord() const;
+
+    bool saveCredentialsSet() const;
+
 private:
     Ui::StartWindow *ui;
 };

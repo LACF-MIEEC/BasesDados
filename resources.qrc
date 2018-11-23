@@ -2,6 +2,11 @@
     <qresource prefix="/Icons">
         <file alias="DBSettingsLogo">resources/icons/DatabaseSettings.png</file>
         <file alias="UserPic">resources/icons/userPic.png</file>
+        <file alias="SearchBlack">resources/icons/searchBlack.png</file>
+        <file alias="SearchWhite">resources/icons/searchWhite.png</file>
+        <file alias="HomeBlack">resources/icons/HomeBlack.png</file>
+        <file alias="HomeWhite">resources/icons/HomeWhite.png</file>
+        <file alias="Upload">resources/icons/Upload.png</file>
     </qresource>
     <qresource prefix="/Logos">
         <file alias="MusicLogo">resources/logos/MusicLogo.png</file>

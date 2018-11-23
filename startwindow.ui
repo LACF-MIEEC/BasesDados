@@ -51,11 +51,15 @@
   </property>
   <property name="styleSheet">
    <string notr="true">*{
-font: 10pt &quot;Century Gothic&quot;;
+	font: 10pt &quot;Century Gothic&quot;;
 }
 QDialog#StartWindow{
-background-color:rgb(70, 170, 70);
+	background-color:rgb(70, 170, 70);
+	color: rgb(0, 0, 0);
 }</string>
+  </property>
+  <property name="modal">
+   <bool>true</bool>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="2" column="1">
