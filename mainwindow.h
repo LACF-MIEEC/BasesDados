@@ -19,7 +19,6 @@ private:
     Ui::MainWindow *ui;
 
 private slots:
-    void loggedIn();
 
 };
 

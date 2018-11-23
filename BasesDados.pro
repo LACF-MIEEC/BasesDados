@@ -42,7 +42,6 @@ FORMS += \
         mainwindow.ui \
     startwindow.ui \
     qsqlconnectiondialog.ui \
-    ola.ui \
     register.ui
 
 # Default rules for deployment.

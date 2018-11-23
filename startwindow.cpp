@@ -1,4 +1,6 @@
 #include "startwindow.h"
+#include "mainwindow.h"
+#include "register.h"
 #include "ui_startwindow.h"
 #include "qsqlconnectiondialog.h"
 
@@ -12,6 +14,37 @@ StartWindow::StartWindow(QWidget *parent) :
     ui(new Ui::StartWindow)
 {
     ui->setupUi(this);
+
+    // Connect to data base
+    if (QSqlDatabase::drivers().isEmpty())
+        QMessageBox::information(this, tr("No database drivers found"),
+                                 tr("This program requires at least one Qt database driver. "
+                                    "Please check the documentation how to build the "
+                                    "Qt SQL plugins."));
+    // Load setting from file
+    // if not use default
+    QString DBdriver  = "QPSQL";
+    QString DBname    = "postgres";
+    QString DBhost    = "localhost";
+    int DBport        = 5432;
+    QString DBuser    = "postgres";
+    QString DBpasswd  = "postgres";
+
+
+    //Start Database Connection
+    QSqlError err;
+    QSqlDatabase db = QSqlDatabase::addDatabase(DBdriver);
+    db.setDatabaseName(DBname);
+    db.setHostName(DBhost);
+    db.setPort(DBport);
+
+    if (!db.open(DBuser, DBpasswd)) {
+        err = db.lastError();
+        QSqlDatabase::removeDatabase(db.connectionName());
+        if (err.type() != QSqlError::NoError)
+            QMessageBox::warning(this, tr("Unable to open database"), tr("An error occurred while "
+                                       "opening the connection: ") + err.text());
+    }
 
 }
 
@@ -60,7 +93,8 @@ void StartWindow::on_LogInButton_clicked()
         //Save Credentials into file?
     }
 
-    this->accept();
+    MainWindow main;
+    main.show();
 }
 
 void StartWindow::on_RegisterButton_clicked()
@@ -72,9 +106,10 @@ void StartWindow::on_RegisterButton_clicked()
     // else
     // promt error dialog
     // Go back to LogIn window
-    this->accept();
-
-
+    Register reg;
+    this->hide();
+    reg.setModal(true);
+    reg.exec();
 }
 
 void StartWindow::on_DBSettings_clicked()

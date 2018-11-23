@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QPushButton" name="pushButton_2">
+  <widget class="QPushButton" name="Register_2">
    <property name="geometry">
     <rect>
      <x>130</x>
@@ -35,21 +35,21 @@
      <height>171</height>
     </rect>
    </property>
-   <layout class="QVBoxLayout" name="Dados">
+   <layout class="QVBoxLayout" name="Data">
     <item>
-     <widget class="QLineEdit" name="Nick"/>
+     <widget class="QLineEdit" name="nick"/>
     </item>
     <item>
-     <widget class="QLineEdit" name="password_2"/>
+     <widget class="QLineEdit" name="password"/>
     </item>
     <item>
-     <widget class="QLineEdit" name="Email"/>
+     <widget class="QLineEdit" name="email"/>
     </item>
     <item>
-     <widget class="QLineEdit" name="Nome_2"/>
+     <widget class="QLineEdit" name="name"/>
     </item>
     <item>
-     <widget class="QLineEdit" name="Apelido_2"/>
+     <widget class="QLineEdit" name="lastname"/>
     </item>
    </layout>
   </widget>
@@ -487,7 +487,7 @@
     <bool>false</bool>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="Cancel">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -599,7 +599,7 @@
      <enum>QLayout::SetDefaultConstraint</enum>
     </property>
     <item>
-     <widget class="QLabel" name="nick">
+     <widget class="QLabel" name="Lnick">
       <property name="palette">
        <palette>
         <active>
@@ -685,7 +685,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="password">
+     <widget class="QLabel" name="Lpw">
       <property name="palette">
        <palette>
         <active>
@@ -762,7 +762,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="email">
+     <widget class="QLabel" name="Lemail">
       <property name="palette">
        <palette>
         <active>
@@ -842,7 +842,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="Nome">
+     <widget class="QLabel" name="Lname">
       <property name="palette">
        <palette>
         <active>
@@ -919,7 +919,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="Apelido">
+     <widget class="QLabel" name="Llastname">
       <property name="palette">
        <palette>
         <active>

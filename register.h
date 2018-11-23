@@ -16,10 +16,10 @@ public:
     ~Register();
 
 private slots:
-    void on_pushButton_clicked();
-    void RegClick();
 
-    void on_pushButton_2_clicked();
+    void on_Register_2_clicked();
+
+    void on_Cancel_clicked();
 
 private:
     Ui::Register *ui;
