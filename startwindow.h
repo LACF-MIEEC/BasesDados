@@ -2,7 +2,7 @@
 #define STARTWINDOW_H
 
 #include <QDialog>
-
+#include "register.h"
 namespace Ui {
 class StartWindow;
 }

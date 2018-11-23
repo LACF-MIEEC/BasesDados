@@ -29,17 +29,21 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     startwindow.cpp \
-    qsqlconnectiondialog.cpp
+    qsqlconnectiondialog.cpp \
+    register.cpp
 
 HEADERS += \
         mainwindow.h \
     startwindow.h \
-    qsqlconnectiondialog.h
+    qsqlconnectiondialog.h \
+    register.h
 
 FORMS += \
         mainwindow.ui \
     startwindow.ui \
-    qsqlconnectiondialog.ui
+    qsqlconnectiondialog.ui \
+    ola.ui \
+    register.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

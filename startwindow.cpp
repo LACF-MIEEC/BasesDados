@@ -2,6 +2,7 @@
 #include "ui_startwindow.h"
 #include "qsqlconnectiondialog.h"
 
+
 #include <QMessageBox>
 #include <QSqlQuery>
 #include <QtSql>
@@ -71,6 +72,9 @@ void StartWindow::on_RegisterButton_clicked()
     // else
     // promt error dialog
     // Go back to LogIn window
+    this->accept();
+
+
 }
 
 void StartWindow::on_DBSettings_clicked()
