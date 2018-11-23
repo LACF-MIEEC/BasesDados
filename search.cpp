@@ -52,3 +52,10 @@ void Search::on_SearchB_clicked()
 
     return;
 }
+
+void Search::on_table_doubleClicked(const QModelIndex &index)
+{
+    QString val = ui->table->model()->data(index).toString();
+    qDebug() << val << index.column();
+
+}
