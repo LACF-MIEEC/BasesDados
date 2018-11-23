@@ -64,7 +64,6 @@ void StartWindow::on_LogInButton_clicked()
         //Save Credentials into file?
     }
 
-     QMessageBox::information(this, tr("Sucess!"), tr("Logged in!"));
      this->hide();
      MainWindow w;
      w.setModal(true);
