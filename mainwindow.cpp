@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "myprofile.h"
 #include "ui_mainwindow.h"
+#include "search.h"
 #include <QPixmap>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -27,7 +28,11 @@ void MainWindow::on_MyProfile_clicked()
     sw.exec();
 }
 
-void MainWindow::on_MyProfile_hover(){
 
-
+void MainWindow::on_Search_clicked()
+{
+    this->hide();
+    Search search;
+    search.setModal(true);
+    search.exec();
 }

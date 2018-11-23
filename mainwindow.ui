@@ -508,9 +508,9 @@ background-repeat: none;
   <widget class="QHoverSensitiveButton" name="Search">
    <property name="geometry">
     <rect>
-     <x>65</x>
+     <x>60</x>
      <y>310</y>
-     <width>141</width>
+     <width>151</width>
      <height>31</height>
     </rect>
    </property>

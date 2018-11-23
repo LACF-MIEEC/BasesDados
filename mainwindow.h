@@ -18,7 +18,8 @@ public:
 private slots:
 
     void on_MyProfile_clicked();
-    void on_MyProfile_hover();
+    void on_Search_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

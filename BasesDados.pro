@@ -32,7 +32,8 @@ SOURCES += \
     register.cpp \
     myprofile.cpp \
     mainwindow.cpp \
-    qhoversensitivebutton.cpp
+    qhoversensitivebutton.cpp \
+    search.cpp
 
 HEADERS += \
     startwindow.h \
@@ -40,14 +41,16 @@ HEADERS += \
     register.h \
     myprofile.h \
     mainwindow.h \
-    qhoversensitivebutton.h
+    qhoversensitivebutton.h \
+    search.h
 
 FORMS += \
     startwindow.ui \
     qsqlconnectiondialog.ui \
     register.ui \
     myprofile.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    search.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

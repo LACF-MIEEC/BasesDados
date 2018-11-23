@@ -7,44 +7,13 @@
 
 #include <QMessageBox>
 #include <QSqlQuery>
-#include <QtSql>
+
 
 StartWindow::StartWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::StartWindow)
 {
     ui->setupUi(this);
-
-    // Connect to data base
-    if (QSqlDatabase::drivers().isEmpty())
-        QMessageBox::information(this, tr("No database drivers found"),
-                                 tr("This program requires at least one Qt database driver. "
-                                    "Please check the documentation how to build the "
-                                    "Qt SQL plugins."));
-    // Load setting from file
-    // if not use default
-    QString DBdriver  = "QPSQL";
-    QString DBname    = "postgres";
-    QString DBhost    = "localhost";
-    int DBport        = 5432;
-    QString DBuser    = "postgres";
-    QString DBpasswd  = "postgres";
-
-
-    //Start Database Connection
-    QSqlError err;
-    QSqlDatabase db = QSqlDatabase::addDatabase(DBdriver);
-    db.setDatabaseName(DBname);
-    db.setHostName(DBhost);
-    db.setPort(DBport);
-
-    if (!db.open(DBuser, DBpasswd)) {
-        err = db.lastError();
-        QSqlDatabase::removeDatabase(db.connectionName());
-        if (err.type() != QSqlError::NoError)
-            QMessageBox::warning(this, tr("Unable to open database"), tr("An error occurred while "
-                                       "opening the connection: ") + err.text());
-    }
 
 }
 
@@ -55,6 +24,8 @@ StartWindow::~StartWindow()
 
 void StartWindow::on_LogInButton_clicked()
 {
+    // Start connection
+    connOpen();
     // Check for username and password
     QString username = ui->UserNameEdit->text();
     QString password = ui->PasswordEdit->text();
@@ -73,7 +44,7 @@ void StartWindow::on_LogInButton_clicked()
     query.next();
     if(query.value(0).toInt() == 0){
         QMessageBox::information(this, tr("Invalid User"),
-                                 tr("To Login you must provide an existing user!"));
+                                 tr("To Login you must provide an existing user!"));;
         return;
     }
 

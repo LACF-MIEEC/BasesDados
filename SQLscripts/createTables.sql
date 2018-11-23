@@ -1,7 +1,7 @@
 ﻿CREATE TABLE musica (
 	id	 BIGINT,
 	nome	 VARCHAR(50) NOT NULL,
-	data	 DATE NOT NULL,
+	data	 TIME NOT NULL,
 	duracao DATE NOT NULL,
 	letra	 VARCHAR(2048),
 	PRIMARY KEY(id)
