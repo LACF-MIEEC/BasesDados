@@ -52,10 +52,21 @@
   <property name="styleSheet">
    <string notr="true">*{
 	font: 10pt &quot;Century Gothic&quot;;
+	color: rgb(0, 0, 0);
 }
 QDialog#StartWindow{
 	background-color:rgb(70, 170, 70);
-	color: rgb(0, 0, 0);
+}
+QPushButton{
+	border-width: 1px;
+    border-style: solid;
+	border-radius: 4px;
+	border-color: rgb(0, 0, 0);
+	background-color: rgb(100, 100, 100);
+	color: rgb(220, 220, 220);
+}
+QGroupBox{
+	background:none;
 }</string>
   </property>
   <property name="modal">
@@ -74,8 +85,7 @@ QDialog#StartWindow{
       <enum>Qt::LeftToRight</enum>
      </property>
      <property name="styleSheet">
-      <string notr="true">background:none;
-</string>
+      <string notr="true"/>
      </property>
      <property name="title">
       <string>LogIn</string>
@@ -170,7 +180,7 @@ QDialog#StartWindow{
          <string notr="true">background: none;</string>
         </property>
         <property name="text">
-         <string>Lembrar-me</string>
+         <string>Remember me</string>
         </property>
         <property name="tristate">
          <bool>false</bool>

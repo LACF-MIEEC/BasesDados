@@ -13,18 +13,22 @@
   <property name="windowTitle">
    <string>Music Database</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="resources.qrc">
+    <normaloff>:/Logos/MusicLogoOrange</normaloff>:/Logos/MusicLogoOrange</iconset>
+  </property>
   <property name="styleSheet">
    <string notr="true">*{
 	selection-background-color: rgb(255, 255, 255);
 	selection-color: rgb(0, 0, 0);
 
-	background-color: rgb(25, 25, 25);
+	background-color: rgb(45, 45, 45);
 	alternate-background-color: rgb(0, 0, 0);
 
 	font: 10pt &quot;Century Gothic&quot;  ;
 	color: rgb(85, 170, 0);
 
-	gridline-color: rgb(85, 170, 255);
+	gridline-color: rgb(206, 206, 206);
 }
 QTextEdit{
 	background-color:rgb(255, 255, 205);
@@ -33,11 +37,14 @@ QTextEdit{
 }
 QLineEdit{
 	background-color:rgb(255, 255, 205);
-	border-color: rgb(0, 170, 255);
+	border-radius: 4px;
 	color: rgb(0,0,0);
 	
 	selection-color: rgb(255, 255, 255);
 	selection-background-color: rgb(85, 170, 255);
+}
+QLineEdit#searchBar{	
+	border-radius: 8px;
 }
 QToolButton{
 	border:none;
@@ -49,7 +56,18 @@ QDialog{
 	color: black;
 }
 QTableView{
-	background-color: rgb(30, 50, 50);
+	background-color: rgb(30, 30, 30);
+}
+QPushButton{
+	border-width: 2px;
+    border-style: solid;
+	border-radius: 3px;
+	border-color: rgb(0, 0, 0);
+	background-color: rgb(100, 100, 100);
+	color: rgb(220, 220, 220);
+}
+QGroupBox{
+	background:none;
 }
 	
 </string>
@@ -71,7 +89,7 @@ QTableView{
     <item row="2" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QToolButton" name="toolButton">
+       <widget class="QToolButton" name="homeButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
           <horstretch>0</horstretch>
@@ -100,7 +118,7 @@ QTableView{
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="toolButton_2">
+       <widget class="QToolButton" name="filesButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
           <horstretch>0</horstretch>
@@ -129,7 +147,7 @@ QTableView{
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="SearchBar">
+       <widget class="QLineEdit" name="searchBar">
         <property name="sizePolicy">
          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
           <horstretch>0</horstretch>
@@ -145,7 +163,7 @@ QTableView{
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="toolButton">
+       <widget class="QToolButton" name="searchButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
           <horstretch>0</horstretch>
@@ -178,9 +196,9 @@ QTableView{
     <item row="4" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
-      <widget class="QWidget" name="stackedWidgetPage1" native="true">
+      <widget class="QWidget" name="stackedWidgetPage1">
        <layout class="QGridLayout" name="gridLayout_2">
         <property name="leftMargin">
          <number>0</number>
@@ -265,7 +283,7 @@ QTableView{
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>304</width>
+                  <width>308</width>
                   <height>227</height>
                  </rect>
                 </property>
@@ -323,7 +341,7 @@ QTableView{
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>304</width>
+                  <width>308</width>
                   <height>226</height>
                  </rect>
                 </property>
@@ -418,7 +436,7 @@ QTableView{
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>305</width>
+                  <width>309</width>
                   <height>227</height>
                  </rect>
                 </property>
@@ -479,7 +497,7 @@ QTableView{
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>305</width>
+                  <width>309</width>
                   <height>226</height>
                  </rect>
                 </property>
@@ -506,14 +524,14 @@ QTableView{
         <item row="0" column="0">
          <widget class="QFrame" name="UserFrame">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+           <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
           <property name="minimumSize">
            <size>
-            <width>250</width>
+            <width>300</width>
             <height>0</height>
            </size>
           </property>
@@ -563,7 +581,7 @@ QTableView{
               <string/>
              </property>
              <property name="pixmap">
-              <pixmap resource="resources.qrc">:/Icons/UserPic</pixmap>
+              <pixmap resource="resources.qrc">:/Logos/MusicLogoOrange</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -816,7 +834,7 @@ QTableView{
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="stackedWidgetPage2" native="true"/>
+      <widget class="QWidget" name="stackedWidgetPage2"/>
      </widget>
     </item>
    </layout>
