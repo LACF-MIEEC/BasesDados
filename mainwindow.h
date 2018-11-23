@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QDialog>
 
 namespace Ui {
 class MainWindow;
@@ -19,7 +20,7 @@ private:
     Ui::MainWindow *ui;
 
 private slots:
-
+    void loggedIn();
 };
 
 #endif // MAINWINDOW_H

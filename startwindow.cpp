@@ -93,8 +93,8 @@ void StartWindow::on_LogInButton_clicked()
         //Save Credentials into file?
     }
 
-    MainWindow main;
-    main.show();
+     QMessageBox::information(this, tr("Sucess!"), tr("Logged in!"));
+     this->accept();
 }
 
 void StartWindow::on_RegisterButton_clicked()
@@ -106,6 +106,7 @@ void StartWindow::on_RegisterButton_clicked()
     // else
     // promt error dialog
     // Go back to LogIn window
+
     Register reg;
     this->hide();
     reg.setModal(true);
