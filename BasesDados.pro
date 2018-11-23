@@ -28,8 +28,8 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    startwindow.cpp \
-    qsqlconnectiondialog.cpp
+    qsqlconnectiondialog.cpp \
+    register.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -39,7 +39,8 @@ HEADERS += \
 FORMS += \
         mainwindow.ui \
     startwindow.ui \
-    qsqlconnectiondialog.ui
+    qsqlconnectiondialog.ui \
+    register.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
