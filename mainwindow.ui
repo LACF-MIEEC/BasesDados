@@ -21,7 +21,7 @@
 	background-color: rgb(25, 25, 25);
 	alternate-background-color: rgb(0, 0, 0);
 
-	font: 10pt &quot;Century Gothic&quot; ;
+	font: 10pt &quot;Century Gothic&quot;  ;
 	color: rgb(85, 170, 0);
 
 	gridline-color: rgb(85, 170, 255);
@@ -42,7 +42,15 @@ QLineEdit{
 QToolButton{
 	border:none;
 }
-
+QLabel{
+	color: white;
+}
+QDialog{
+	color: black;
+}
+QTableView{
+	background-color: rgb(30, 50, 50);
+}
 	
 </string>
   </property>
@@ -169,6 +177,9 @@ QToolButton{
     </item>
     <item row="4" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
       <widget class="QWidget" name="stackedWidgetPage1" native="true">
        <layout class="QGridLayout" name="gridLayout_2">
         <property name="leftMargin">
@@ -183,17 +194,7 @@ QToolButton{
         <property name="bottomMargin">
          <number>0</number>
         </property>
-        <item row="0" column="1">
-         <widget class="Line" name="line_2">
-          <property name="frameShadow">
-           <enum>QFrame::Plain</enum>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="3">
+        <item row="0" column="2">
          <widget class="QFrame" name="frame">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
@@ -222,6 +223,9 @@ QToolButton{
            </property>
            <item row="0" column="0">
             <layout class="QVBoxLayout" name="verticalLayout_2">
+             <property name="spacing">
+              <number>1</number>
+             </property>
              <item>
               <widget class="QLabel" name="PlayListLabel">
                <property name="sizePolicy">
@@ -232,6 +236,19 @@ QToolButton{
                </property>
                <property name="text">
                 <string>PlayLists</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="Line" name="line_5">
+               <property name="frameShadow">
+                <enum>QFrame::Plain</enum>
+               </property>
+               <property name="lineWidth">
+                <number>1</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
                </property>
               </widget>
              </item>
@@ -248,8 +265,8 @@ QToolButton{
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>301</width>
-                  <height>223</height>
+                  <width>304</width>
+                  <height>227</height>
                  </rect>
                 </property>
                 <layout class="QGridLayout" name="gridLayout_8">
@@ -281,6 +298,19 @@ QToolButton{
               </widget>
              </item>
              <item>
+              <widget class="Line" name="line_6">
+               <property name="frameShadow">
+                <enum>QFrame::Plain</enum>
+               </property>
+               <property name="lineWidth">
+                <number>1</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
               <widget class="QScrollArea" name="RegisterScrol_2">
                <property name="frameShape">
                 <enum>QFrame::NoFrame</enum>
@@ -293,8 +323,8 @@ QToolButton{
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>301</width>
-                  <height>223</height>
+                  <width>304</width>
+                  <height>226</height>
                  </rect>
                 </property>
                 <layout class="QGridLayout" name="gridLayout_9">
@@ -317,7 +347,7 @@ QToolButton{
           </layout>
          </widget>
         </item>
-        <item row="0" column="2">
+        <item row="0" column="1">
          <widget class="QFrame" name="UpdatesFrame">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
@@ -346,6 +376,9 @@ QToolButton{
            </property>
            <item row="0" column="0">
             <layout class="QVBoxLayout" name="verticalLayout">
+             <property name="spacing">
+              <number>1</number>
+             </property>
              <item>
               <widget class="QLabel" name="NotifLabel">
                <property name="sizePolicy">
@@ -356,6 +389,19 @@ QToolButton{
                </property>
                <property name="text">
                 <string>Notifications</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="Line" name="line">
+               <property name="frameShadow">
+                <enum>QFrame::Plain</enum>
+               </property>
+               <property name="lineWidth">
+                <number>1</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
                </property>
               </widget>
              </item>
@@ -372,12 +418,15 @@ QToolButton{
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>302</width>
-                  <height>223</height>
+                  <width>305</width>
+                  <height>227</height>
                  </rect>
                 </property>
                 <layout class="QGridLayout" name="gridLayout_5">
-                 <item row="0" column="2">
+                 <item row="1" column="1">
+                  <widget class="QTableView" name="NotifTableView"/>
+                 </item>
+                 <item row="1" column="2">
                   <widget class="QScrollBar" name="verticalScrollBar">
                    <property name="tracking">
                     <bool>true</bool>
@@ -390,9 +439,6 @@ QToolButton{
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="1">
-                  <widget class="QTableView" name="NotifTableView"/>
-                 </item>
                 </layout>
                </widget>
               </widget>
@@ -401,6 +447,19 @@ QToolButton{
               <widget class="QLabel" name="RegLabel">
                <property name="text">
                 <string>Entry Register</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="Line" name="line_2">
+               <property name="frameShadow">
+                <enum>QFrame::Plain</enum>
+               </property>
+               <property name="lineWidth">
+                <number>1</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
                </property>
               </widget>
              </item>
@@ -420,15 +479,15 @@ QToolButton{
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>302</width>
-                  <height>223</height>
+                  <width>305</width>
+                  <height>226</height>
                  </rect>
                 </property>
                 <layout class="QGridLayout" name="gridLayout_6">
-                 <item row="0" column="0">
+                 <item row="1" column="0">
                   <widget class="QTableView" name="Reg"/>
                  </item>
-                 <item row="0" column="1">
+                 <item row="1" column="1">
                   <widget class="QScrollBar" name="verticalScrollBar_2">
                    <property name="orientation">
                     <enum>Qt::Vertical</enum>
