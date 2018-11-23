@@ -29,7 +29,8 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     qsqlconnectiondialog.cpp \
-    register.cpp
+    register.cpp \
+    startwindow.cpp
 
 HEADERS += \
         mainwindow.h \
