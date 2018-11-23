@@ -82,7 +82,12 @@ void Register::on_Register_2_clicked()
 
         QMessageBox::information(this, tr("Sucess!"),
                                      tr("Welcome to the Jungle!!!")); // Change?
-        return;
+
+        // Go back to start menu
+        this->hide();
+        StartWindow start;
+        start.setModal(true);
+        start.exec();
 }
 
 
