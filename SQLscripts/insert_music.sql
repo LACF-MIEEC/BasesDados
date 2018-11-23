@@ -1,5 +1,5 @@
 ﻿INSERT INTO musica (id, nome, data, duracao, letra)
-		Values (1, 'Bad Liar', '2018-01-01', '2018-01-01','Oh, hush, my dear, its been a difficult year
+		Values (1, 'Bad Liar', '2018-01-01', '00:04:21','Oh, hush, my dear, its been a difficult year
 And terrors don t prey on innocent victims
 Trust me, darlin, trust me darlin
 Its been a loveless year

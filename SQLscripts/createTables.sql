@@ -1,13 +1,13 @@
 ﻿CREATE TABLE musica (
 	id	 BIGINT,
 	nome	 VARCHAR(50) NOT NULL,
-	data	 TIME NOT NULL,
-	duracao DATE NOT NULL,
+	data	 DATE NOT NULL,
+	duracao TIME NOT NULL,
 	letra	 VARCHAR(2048),
 	PRIMARY KEY(id)
 );
 
-CREATE TABLE interprete (
+CREATE TABLE artista (
 	nome	 VARCHAR(512),
 	datainicio DATE,
 	datafim	 DATE,
@@ -21,15 +21,15 @@ CREATE TABLE musico (
 	localnascimento	 VARCHAR(512),
 	localmorte		 VARCHAR(512),
 	nomenascenca		 VARCHAR(512),
-	interprete_nome	 VARCHAR(512),
-	interprete_datainicio DATE,
-	PRIMARY KEY(interprete_nome,interprete_datainicio)
+	artista_nome	 VARCHAR(512),
+	artista_datainicio DATE,
+	PRIMARY KEY(artista_nome,artista_datainicio)
 );
 
 CREATE TABLE grupo (
-	interprete_nome	 VARCHAR(512),
-	interprete_datainicio DATE,
-	PRIMARY KEY(interprete_nome,interprete_datainicio)
+	artista_nome	 VARCHAR(512),
+	artista_datainicio DATE,
+	PRIMARY KEY(artista_nome,artista_datainicio)
 );
 
 CREATE TABLE album (
@@ -133,11 +133,11 @@ CREATE TABLE musicogrupo (
 	papel			 VARCHAR(512) NOT NULL,
 	datainicio			 DATE,
 	datafim			 DATE,
-	grupo_interprete_nome	 VARCHAR(512),
-	grupo_interprete_datainicio	 DATE,
-	musico_interprete_nome	 VARCHAR(512),
-	musico_interprete_datainicio DATE,
-	PRIMARY KEY(grupo_interprete_nome,grupo_interprete_datainicio,musico_interprete_nome,musico_interprete_datainicio)
+	grupo_artista_nome	 VARCHAR(512),
+	grupo_artista_datainicio	 DATE,
+	musico_artista_nome	 VARCHAR(512),
+	musico_artista_datainicio DATE,
+	PRIMARY KEY(grupo_artista_nome,grupo_artista_datainicio,musico_artista_nome,musico_artista_datainicio)
 );
 
 CREATE TABLE registoacesso (
@@ -174,12 +174,12 @@ CREATE TABLE playlist_musica (
 	PRIMARY KEY(playlist_nome,playlist_utilizador_nick,musica_id)
 );
 
-CREATE TABLE interprete_concertos (
-	interprete_nome	 VARCHAR(512),
-	interprete_datainicio DATE,
+CREATE TABLE artista_concertos (
+	artista_nome	 VARCHAR(512),
+	artista_datainicio DATE,
 	concertos_nome	 VARCHAR(512),
 	concertos_data	 DATE,
-	PRIMARY KEY(interprete_nome,interprete_datainicio,concertos_nome,concertos_data)
+	PRIMARY KEY(artista_nome,artista_datainicio,concertos_nome,concertos_data)
 );
 
 CREATE TABLE musica_album (
@@ -190,14 +190,14 @@ CREATE TABLE musica_album (
 
 CREATE TABLE musica_musico (
 	musica_id			 BIGINT,
-	musico_interprete_nome	 VARCHAR(512),
-	musico_interprete_datainicio DATE,
-	PRIMARY KEY(musica_id,musico_interprete_nome,musico_interprete_datainicio)
+	musico_artista_nome	 VARCHAR(512),
+	musico_artista_datainicio DATE,
+	PRIMARY KEY(musica_id,musico_artista_nome,musico_artista_datainicio)
 );
 
-CREATE TABLE musica_interprete (
+CREATE TABLE musica_artista (
 	musica_id		 BIGINT,
-	interprete_nome	 VARCHAR(512),
-	interprete_datainicio DATE,
-	PRIMARY KEY(musica_id,interprete_nome,interprete_datainicio)
+	artista_nome	 VARCHAR(512),
+	artista_datainicio DATE,
+	PRIMARY KEY(musica_id,artista_nome,artista_datainicio)
 );
