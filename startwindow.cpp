@@ -94,7 +94,10 @@ void StartWindow::on_LogInButton_clicked()
     }
 
      QMessageBox::information(this, tr("Sucess!"), tr("Logged in!"));
-     this->accept();
+     this->hide();
+     MainWindow w;
+     w.setModal(true);
+     w.exec();
 }
 
 void StartWindow::on_RegisterButton_clicked()
