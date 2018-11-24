@@ -73,6 +73,7 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     currentUser.clear();
+    this->setHidden(true);
 
     StartWindow *sw = new StartWindow(this);
     connect(sw,SIGNAL(acceptedUser(QString)),this,SLOT(loggedIn(QString)));
@@ -88,27 +89,40 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::loggedIn(QString username){
+
     this->show();
+
+    this->findChild<QDialog*>("StartWindow")->deleteLater();
 
     currentUser = username;
 
-    QSqlQuery query;
+
+    //////////////////////////////////////////////////////////////////////
+    /// Write Log Register
+    ///
+    QSqlDatabase db = QSqlDatabase::database();
+    QSqlQuery query(db);
     QDateTime timestamp;
     // Get Timestamp
     query.prepare("SELECT current_timestamp");
     query.exec();
-    query.next();
+    query.first();
     timestamp = query.value(0).toDateTime();
     qDebug() << "Login Date: " << timestamp;
 
-    query.prepare("INSERT INTO registoacesso (data, tipoacesso, utilizador_nick) VALUES (:data, :tipoacesso, :utilizador_nick)");
-    query.bindValue(":data", timestamp);
-    query.bindValue(":tipoacesso", "LogIn");
-    query.bindValue(":utilizador_nick", username);
+    if(query.prepare("INSERT INTO registoacesso (data, tipoacesso, utilizador_nick) VALUES (:data, :tipoacesso, :utilizador_nick)")){
+        query.bindValue(":data", timestamp);
+        query.bindValue(":tipoacesso", "LogIn");
+        query.bindValue(":utilizador_nick", username);
 
-    if(!query.exec()){
+        if(!query.exec()){
+            qDebug() << "ERROR: " << query.lastError();
+        }
+        qDebug() << "Inserted " << query.numRowsAffected() << " into registoacesso";
+    }else
         qDebug() << "ERROR: " << query.lastError();
-    }
+
+    refreshAll();
 
     query.finish();
     query.clear();
@@ -117,36 +131,101 @@ void MainWindow::loggedIn(QString username){
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    QMessageBox::StandardButton resBtn = QMessageBox::question( this, tr("Exit Music Database"),
-                                                                tr("Are you sure?\n"));
-    if (resBtn != QMessageBox::Yes) {
-        event->ignore();
-    } else {
-        if(currentUser.isEmpty()){
-            QSqlQuery query;
-            QDateTime timestamp;
-            // Get Timestamp
-            query.prepare("SELECT current_timestamp");
-            query.exec();
-            query.next();
-            timestamp = query.value(0).toDateTime();
-            qDebug() << "Logoff Date: " << timestamp;
+    if(!currentUser.isEmpty()){
+        QMessageBox::StandardButton resBtn = QMessageBox::question( this, tr("Exit Music Database"),
+                                                                    tr("Are you sure?\n"));
+        if (resBtn != QMessageBox::Yes) {
+            event->ignore();
+            return;
+        } else {
+            {
+                QSqlDatabase db = QSqlDatabase::database();
+                QSqlQuery query(db);
+                QDateTime timestamp;
+                // Get Timestamp
+                query.prepare("SELECT current_timestamp");
+                query.exec();
+                query.first();
+                timestamp = query.value(0).toDateTime();
+                qDebug() << "Logoff Date: " << timestamp;
 
-            query.prepare("INSERT INTO registoacesso (data, tipoacesso, utilizador_nick) VALUES (:data, :tipoacesso, :utilizador_nick)");
-            query.bindValue(":data", timestamp);
-            query.bindValue(":tipoacesso", "LogOff");
-            query.bindValue(":utilizador_nick", currentUser);
+                if(query.prepare("INSERT INTO registoacesso (data, tipoacesso, utilizador_nick) VALUES (:data, :tipoacesso, :utilizador_nick)")){
+                    query.bindValue(":data", timestamp);
+                    query.bindValue(":tipoacesso", "LogOff");
+                    query.bindValue(":utilizador_nick", currentUser);
 
-            if(!query.exec()){
-                qDebug() << "ERROR: " << query.lastError();
+                    if(!query.exec()){
+                        qDebug() << "ERROR: " << query.lastError();
+
+                    }
+                    qDebug() << "Inserted " << query.numRowsAffected() << " into registoacesso";
+                }else
+                    qDebug() << "ERROR: " << query.lastError();
+
+                query.finish();
+                query.clear();
+                db.close();
             }
-
-            query.finish();
-            query.clear();
+            QSqlDatabase::removeDatabase(QSqlDatabase::database().connectionName());
         }
-        QSqlDatabase::database().close();
-        QSqlDatabase::removeDatabase(QSqlDatabase::database().connectionName());
-
-        event->accept();
     }
+
+    event->accept();
+}
+
+void MainWindow::refreshAll(){
+
+    refreshUserPanel();
+
+}
+
+void MainWindow::refreshUserPanel(){
+
+    ui->UserInfoBox->setTitle(currentUser);
+
+    QSqlDatabase db = QSqlDatabase::database();
+    QSqlQuery query;
+
+    query.prepare("SELECT primeironome, ultimonome, email, pais, bio, imagem FROM utilizador WHERE nick=:username");
+    query.bindValue(":username",currentUser);
+    query.exec();
+    query.first();
+    ui->Name->setText(query.value(0).toString() + " " + query.value(1).toString());
+    ui->email->setText(query.value(2).toString());
+    ui->country->setText(query.value(3).toString());
+    ui->bio->setText(query.value(4).toString());
+    if(!query.value(5).isNull()){
+        QByteArray outByteArray = query.value(5).toByteArray();
+        QPixmap outPixmap = QPixmap();
+        outPixmap.loadFromData(outByteArray);
+
+        ui->UserPic->setPixmap(outPixmap);
+    }
+    query.finish();
+    query.clear();
+
+}
+
+void MainWindow::on_homeButton_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->homePage);
+}
+
+void MainWindow::on_filesButton_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->uploadsPage);
+}
+
+void MainWindow::on_searchButton_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->searchPage);
+
+    QStringList searchWords = ui->searchBar->text().split(" ", QString::SkipEmptyParts);
+
+    //PERFORM SEARCH FOR RELATED WORDS
+}
+
+void MainWindow::on_searchBar_returnPressed()
+{
+    on_searchButton_clicked();
 }

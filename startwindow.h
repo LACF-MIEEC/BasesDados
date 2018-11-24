@@ -31,6 +31,12 @@ private slots:
 
     bool saveCredentialsSet() const;
 
+    void on_RegButtonBox_rejected();
+
+    void on_cancelButton_clicked();
+
+    void on_RegButtonBox_accepted();
+
 private:
     Ui::StartWindow *ui;
 };

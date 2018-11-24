@@ -35,6 +35,15 @@ QTextEdit{
 	border-color: rgb(0, 170, 255);
 	color: rgb(0,0,0);
 }
+QPlainTextEdit{
+	background-color:rgb(255, 255, 205);
+	border-radius: 4px;
+	color: rgb(0,0,0);
+	
+	selection-color: rgb(255, 255, 255);
+	selection-background-color: rgb(85, 170, 255);
+}
+
 QLineEdit{
 	background-color:rgb(255, 255, 205);
 	border-radius: 4px;
@@ -65,11 +74,22 @@ QPushButton{
 	border-color: rgb(0, 0, 0);
 	background-color: rgb(100, 100, 100);
 	color: rgb(220, 220, 220);
+	min-width: 80px;
 }
 QGroupBox{
 	background:none;
 }
-	
+QDialog#sw{
+	font: 10pt &quot;Century Gothic&quot;;
+	color: rgb(0, 0, 0);
+	background-color:rgb(70, 170, 70);
+}
+QGroupBox#RegGroup{
+	border-width: 1px;
+	border-style: solid;
+	border-color: yellow;
+
+}
 </string>
   </property>
   <widget class="QWidget" name="centralWidget">
@@ -160,6 +180,12 @@ QGroupBox{
           <height>25</height>
          </size>
         </property>
+        <property name="inputMask">
+         <string>Search</string>
+        </property>
+        <property name="text">
+         <string>Serc</string>
+        </property>
        </widget>
       </item>
       <item>
@@ -198,7 +224,7 @@ QGroupBox{
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="stackedWidgetPage1">
+      <widget class="QWidget" name="homePage">
        <layout class="QGridLayout" name="gridLayout_2">
         <property name="leftMargin">
          <number>0</number>
@@ -284,7 +310,7 @@ QGroupBox{
                   <x>0</x>
                   <y>0</y>
                   <width>308</width>
-                  <height>227</height>
+                  <height>225</height>
                  </rect>
                 </property>
                 <layout class="QGridLayout" name="gridLayout_8">
@@ -342,7 +368,7 @@ QGroupBox{
                   <x>0</x>
                   <y>0</y>
                   <width>308</width>
-                  <height>226</height>
+                  <height>225</height>
                  </rect>
                 </property>
                 <layout class="QGridLayout" name="gridLayout_9">
@@ -437,7 +463,7 @@ QGroupBox{
                   <x>0</x>
                   <y>0</y>
                   <width>309</width>
-                  <height>227</height>
+                  <height>225</height>
                  </rect>
                 </property>
                 <layout class="QGridLayout" name="gridLayout_5">
@@ -498,7 +524,7 @@ QGroupBox{
                   <x>0</x>
                   <y>0</y>
                   <width>309</width>
-                  <height>226</height>
+                  <height>225</height>
                  </rect>
                 </property>
                 <layout class="QGridLayout" name="gridLayout_6">
@@ -594,7 +620,7 @@ QGroupBox{
            <item row="2" column="0">
             <widget class="QGroupBox" name="UserInfoBox">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+              <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
@@ -612,8 +638,8 @@ QGroupBox{
               <set>Qt::AlignCenter</set>
              </property>
              <layout class="QGridLayout" name="gridLayout_3">
-              <item row="1" column="0">
-               <widget class="QLabel" name="nameLabel">
+              <item row="2" column="0">
+               <widget class="QLabel" name="emailLabel">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -627,7 +653,7 @@ QGroupBox{
                  </size>
                 </property>
                 <property name="text">
-                 <string>Full Name:</string>
+                 <string>E-mail:</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -656,8 +682,8 @@ QGroupBox{
                 </property>
                </widget>
               </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="emailLabel">
+              <item row="1" column="0">
+               <widget class="QLabel" name="nameLabel">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -671,15 +697,15 @@ QGroupBox{
                  </size>
                 </property>
                 <property name="text">
-                 <string>E-mail:</string>
+                 <string>Full Name:</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                 </property>
                </widget>
               </item>
-              <item row="2" column="1">
-               <widget class="QLabel" name="email">
+              <item row="3" column="1">
+               <widget class="QLabel" name="country">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -693,7 +719,7 @@ QGroupBox{
                  </size>
                 </property>
                 <property name="text">
-                 <string>luis.acf.19@gmail.com</string>
+                 <string>Portugal</string>
                 </property>
                 <property name="wordWrap">
                  <bool>true</bool>
@@ -722,8 +748,8 @@ QGroupBox{
                 </property>
                </widget>
               </item>
-              <item row="3" column="1">
-               <widget class="QLabel" name="country">
+              <item row="2" column="1">
+               <widget class="QLabel" name="email">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -737,7 +763,7 @@ QGroupBox{
                  </size>
                 </property>
                 <property name="text">
-                 <string>Portugal</string>
+                 <string>luis.acf.19@gmail.com</string>
                 </property>
                 <property name="wordWrap">
                  <bool>true</bool>
@@ -769,7 +795,7 @@ QGroupBox{
               <item row="4" column="1">
                <widget class="QLabel" name="bio">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -797,22 +823,6 @@ QGroupBox{
                 </property>
                </widget>
               </item>
-              <item row="5" column="1">
-               <spacer name="verticalSpacer">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::Expanding</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>40</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
              </layout>
             </widget>
            </item>
@@ -834,7 +844,8 @@ QGroupBox{
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="stackedWidgetPage2"/>
+      <widget class="QWidget" name="uploadsPage"/>
+      <widget class="QWidget" name="searchPage"/>
      </widget>
     </item>
    </layout>
