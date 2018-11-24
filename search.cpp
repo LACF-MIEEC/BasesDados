@@ -33,7 +33,7 @@ void Search::on_SearchB_clicked()
     QString search = ui->lineS->text();
     bool mus = ui->musicCh->checkState();
     bool alb = ui->albumCh->checkState();
-    bool art = ui->albumCh->checkState();
+    bool art = ui->artistCh->checkState();
 
 
     if (search.isEmpty()){
@@ -53,18 +53,31 @@ void Search::on_SearchB_clicked()
 
     if(mus==1){
         // Select from BD
-        query->prepare("SELECT nome.m, nome.a, duracao "
-                       "FROM musica m, artista ar, album al, musica_artista mar, musica_album mal"
-                       "WHERE al.id = album.id, m.id = mar.musica_id,"
-                       "mar.musica_id = m.id, artista_nome = ar.nome, artista_data = ar.datainicio,"
-                       "nome.m = :music");
+        query->prepare("select m.nome, ar.nome, al.nome from musica m, album al, artista ar, musica_album mal, musica_artista mar where m.id = mal.musica_id and al.id = mal.album_id and m.id = mar.musica_id and ar.nome = mar.artista_nome and mar.artista_datainicio = ar.datainicio and m.nome = :music;");
         query->bindValue(":music", search);
         query->exec();
 
         modal->setQuery(*query);
         ui->table->setModel(modal);
     }
+    else if(alb==1){
+        // Select from BD
+        query->prepare("select m.nome, ar.nome, al.nome from musica m, album al, artista ar, musica_album mal, musica_artista mar where m.id = mal.musica_id and al.id = mal.album_id and m.id = mar.musica_id and ar.nome = mar.artista_nome and mar.artista_datainicio = ar.datainicio and al.nome = :album;");
+        query->bindValue(":album", search);
+        query->exec();
 
+        modal->setQuery(*query);
+        ui->table->setModel(modal);
+    }
+    else if(art==1){
+        // Select from BD
+        query->prepare("select m.nome, ar.nome, al.nome from musica m, album al, artista ar, musica_album mal, musica_artista mar where m.id = mal.musica_id and al.id = mal.album_id and m.id = mar.musica_id and ar.nome = mar.artista_nome and mar.artista_datainicio = ar.datainicio and ar.nome = :artist;");
+        query->bindValue(":artist", search);
+        query->exec();
+
+        modal->setQuery(*query);
+        ui->table->setModel(modal);
+    }
 
 
     return;
