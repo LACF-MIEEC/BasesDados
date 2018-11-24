@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>665</width>
+    <width>726</width>
     <height>517</height>
    </rect>
   </property>
@@ -86,9 +86,9 @@
   <widget class="QLabel" name="BackGround">
    <property name="geometry">
     <rect>
-     <x>-30</x>
+     <x>0</x>
      <y>0</y>
-     <width>917</width>
+     <width>780</width>
      <height>521</height>
     </rect>
    </property>
@@ -162,8 +162,11 @@
    <property name="text">
     <string/>
    </property>
+   <property name="pixmap">
+    <pixmap resource="resources.qrc">:/Backgrounds/resources/backgrounds/main_menu.png</pixmap>
+   </property>
    <property name="scaledContents">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="wordWrap">
     <bool>false</bool>
@@ -582,6 +585,8 @@ background-repeat: none;
    <header>qhoversensitivebutton.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

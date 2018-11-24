@@ -2,7 +2,6 @@
 #include "myprofile.h"
 #include "ui_mainwindow.h"
 #include "search.h"
-#include <QPixmap>
 
 MainWindow::MainWindow(QWidget *parent) :
     QDialog(parent),
@@ -10,9 +9,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // BackGround Image
-    QPixmap pix("D:/UC Dylan/3º ano 1º semestre/BD/Project/BasesDados/resources/logos/main_menu.png");
-    ui->BackGround->setPixmap(pix.scaled(1000,519,Qt::KeepAspectRatio));
 }
 
 MainWindow::~MainWindow()

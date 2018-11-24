@@ -8,4 +8,8 @@
         <file alias="MusicLogoOrange">resources/logos/MusicLogoOrange.png</file>
     </qresource>
     <qresource prefix="/"/>
+    <qresource prefix="/Backgrounds">
+        <file>resources/backgrounds/main_menu.png</file>
+        <file>resources/backgrounds/searchimage.jpg</file>
+    </qresource>
 </RCC>

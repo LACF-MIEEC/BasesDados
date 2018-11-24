@@ -18,9 +18,6 @@ Search::Search(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // BackGround Image
-    QPixmap pix("D:/UC Dylan/3º ano 1º semestre/BD/Project/BasesDados/resources/logos/searchimage.jpg");
-    ui->label->setPixmap(pix.scaled(800,501,Qt::KeepAspectRatio));
 }
 
 Search::~Search()
