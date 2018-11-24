@@ -20,6 +20,8 @@ private slots:
 
     void on_table_doubleClicked(const QModelIndex &index);
 
+    void on_pushButton_clicked();
+
 private:
     Ui::Search *ui;
 };

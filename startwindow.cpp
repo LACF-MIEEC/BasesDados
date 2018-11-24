@@ -3,7 +3,7 @@
 #include "register.h"
 #include "ui_startwindow.h"
 #include "qsqlconnectiondialog.h"
-
+#include "search.h"
 
 #include <QMessageBox>
 #include <QSqlQuery>

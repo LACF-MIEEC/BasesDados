@@ -7,4 +7,5 @@
         <file alias="MusicLogo">resources/logos/MusicLogo.png</file>
         <file alias="MusicLogoOrange">resources/logos/MusicLogoOrange.png</file>
     </qresource>
+    <qresource prefix="/"/>
 </RCC>

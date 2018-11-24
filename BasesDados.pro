@@ -42,7 +42,8 @@ HEADERS += \
     myprofile.h \
     mainwindow.h \
     qhoversensitivebutton.h \
-    search.h
+    search.h \
+    globals.h
 
 FORMS += \
     startwindow.ui \
@@ -59,3 +60,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     resources.qrc
+
+DISTFILES +=
