@@ -46,7 +46,7 @@ Please believe me');
 
 -- BAD LIAR SELENA GOMEZ
 INSERT INTO musica (id, nome, data, duracao, letra)
-		Values (2, 'Bad Liar', '2017-00-00', '00:03:52', 'I was walking down the street the other day
+		Values (2, 'Bad Liar', '2017-05-18', '00:03:52', 'I was walking down the street the other day
 Tryna distract myself
 But then I see your face
 Oh wait, thats someone else
@@ -105,63 +105,56 @@ No, no, no, no
 Not to give in to you
 All of my feelings on fire
 Guess Im a bad liar
-And oh baby lets make reality, actuality, a reality
-Oh baby lets make reality, actuality, a reality
-Oh, oh, Im tryin, Im tryin, Im tryin
-Im tryin, Im tryin
-Oh tryin, Im tryin, Im tryin
-Im tryin, Im tryin
-Not to think about you
-No, no, no, no
-Not to think about you
-No, no, no, no
-Oh Im tryin, Im tryin, Im tryin
-Im tryin, Im tryin
-Oh tryin, Im tryin, Im tryin
-Im tryin, Im tryin
-Not to give in to you
-No, no, no, no
-Not to give in to you
-With my feelings on fire
-Guess Im a bad liar');
-
--- insert musicos
-INSERT INTO musico(artista_nome, artista_datainicio, genero)
-		VALUES('Selena Gomez', '00-00-00', 'Female');
-
-INSERT INTO musico(artista_nome, artista_datainicio, genero)
-		VALUES('Julia Michaels', '00-00-00', 'Female');
-
-INSERT INTO musico(artista_nome, artista_datainicio, genero)
-		VALUES('Justin Tranter', '00-00-00', 'Male');
-
-INSERT INTO musico(artista_nome, artista_datainicio, genero)
-		VALUES('Ian Kirkpatrick', '00-00-00', 'Male');
-
--- insert quem compoe
-INSERT INTO musica_musico(musica_id, musico_artista_nome, musico_artista_datainicio)
-		VALUES (2, 'Selena Gomez', '00-00-00');
-
-INSERT INTO musica_musico(musica_id, musico_artista_nome, musico_artista_datainicio)
-		VALUES (2, 'Julia Michaels', '00-00-00');
-
-INSERT INTO musica_musico(musica_id, musico_artista_nome, musico_artista_datainicio)
-		VALUES (2, 'Justin Tranter', '00-00-00');
-
-INSERT INTO musica_musico(musica_id, musico_artista_nome, musico_artista_datainicio)
-		VALUES (2, 'Ian Kirkpatrick', '00-00-00');
+');
 
 -- ARTISTA
 INSERT INTO artista(nome, datainicio)
-		VALUES('Selena Gomez', '00-00-00');
+		VALUES('Selena Gomez', '2000-01-01');
+INSERT INTO artista(nome, datainicio)
+		VALUES('Julia Michaels', '2000-01-01');
+INSERT INTO artista(nome, datainicio)
+		VALUES('Justin Tranter', '2000-01-01');
+INSERT INTO artista(nome, datainicio)
+		VALUES('Ian Kirkpatrick', '2000-01-01');
+		
+-- insert musicos
+INSERT INTO musico(artista_nome, artista_datainicio, genero)
+		VALUES('Selena Gomez', '2000-01-01', 'Female');
+
+INSERT INTO musico(artista_nome, artista_datainicio, genero)
+		VALUES('Julia Michaels', '2000-01-01', 'Female');
+
+INSERT INTO musico(artista_nome, artista_datainicio, genero)
+		VALUES('Justin Tranter', '2000-01-01', 'Male');
+
+INSERT INTO musico(artista_nome, artista_datainicio, genero)
+		VALUES('Ian Kirkpatrick', '2000-01-01', 'Male');
+
+-- insert quem compoe
+INSERT INTO musica_musico(musica_id, musico_artista_nome, musico_artista_datainicio)
+		VALUES (2, 'Selena Gomez', '2000-01-01');
+
+INSERT INTO musica_musico(musica_id, musico_artista_nome, musico_artista_datainicio)
+		VALUES (2, 'Julia Michaels', '2000-01-01');
+
+INSERT INTO musica_musico(musica_id, musico_artista_nome, musico_artista_datainicio)
+		VALUES (2, 'Justin Tranter', '2000-01-01');
+
+INSERT INTO musica_musico(musica_id, musico_artista_nome, musico_artista_datainicio)
+		VALUES (2, 'Ian Kirkpatrick', '2000-01-01');
+
+
 
 -- Musica ARTISTA
 INSERT INTO musica_artista(musica_id, artista_nome, artista_datainicio)
-		VALUES(2, 'Selena Gomez', '00-00-00');
+		VALUES(2, 'Selena Gomez', '2000-01-01');
 
+-- EDITORA
+INSERT INTO editora(nome, datafundacao)
+		VALUES('Interscope Records', '2000-01-01');
 -- ALBUM
 INSERT INTO album(id, nome, datalancamento, editora_nome)
-		VALUES(1, 'SG2', '2018-00-00', ' Interscope Records');
+		VALUES(1, 'SG2', '2018-01-01', ' Interscope Records');
 
 -- Ligação ALBUM MUSICA
 INSERT INTO musica_album(musica_id, album_id)

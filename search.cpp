@@ -53,7 +53,11 @@ void Search::on_SearchB_clicked()
 
     if(mus==1){
         // Select from BD
-        query->prepare("SELECT nome, data, duracao FROM musica WHERE nome = :music ");
+        query->prepare("SELECT nome.m, nome.a, duracao "
+                       "FROM musica m, artista ar, album al, musica_artista mar, musica_album mal"
+                       "WHERE al.id = album.id, m.id = mar.musica_id,"
+                       "mar.musica_id = m.id, artista_nome = ar.nome, artista_data = ar.datainicio,"
+                       "nome.m = :music");
         query->bindValue(":music", search);
         query->exec();
 
@@ -69,17 +73,19 @@ void Search::on_SearchB_clicked()
 void Search::on_table_doubleClicked(const QModelIndex &index)
 {
 
+    // Double click on 1st column
     if (index.column()==0){
-           val[0] = ui->table->model()->data(index).toString();
-           QModelIndex index1 = index.sibling(index.row(), index.column()+1);
-           val[1] = ui->table->model()->data(index1).toString();
-           QModelIndex index2 = index.sibling(index.row(), index.column()+2);
-           val[2] = ui->table->model()->data(index2).toString();
-           qDebug() << val[0];
-           qDebug() << val[1];
-           qDebug() << val[2];
+        val[0] = ui->table->model()->data(index).toString();
+        QModelIndex index1 = index.sibling(index.row(), index.column()+1);
+        val[1] = ui->table->model()->data(index1).toString();
+        QModelIndex index2 = index.sibling(index.row(), index.column()+2);
+        val[2] = ui->table->model()->data(index2).toString();
+        qDebug() << val[0];
+        qDebug() << val[1];
+        qDebug() << val[2];
     //return;
     }
+    // Double click on 2nd column
     else if(index.column()==1){
         val[1] = ui->table->model()->data(index).toString();
         QModelIndex index1 = index.sibling(index.row(), index.column()+1);
@@ -90,6 +96,7 @@ void Search::on_table_doubleClicked(const QModelIndex &index)
         qDebug() << val[1];
         qDebug() << val[2];
     }
+    // Double click on 3rd column
     else if(index.column()==2){
         val[2] = ui->table->model()->data(index).toString();
         QModelIndex index1 = index.sibling(index.row(), index.column()-1);

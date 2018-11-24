@@ -39,7 +39,7 @@ CREATE TABLE album (
 	detalhes	 VARCHAR(512),
 	tipo		 VARCHAR(20),
 	capaimagem	 BYTEA,
-	editora_nome	 BIGINT NOT NULL,
+	editora_nome	 VARCHAR(50) NOT NULL,
 	PRIMARY KEY(id)
 );
 
@@ -83,7 +83,7 @@ CREATE TABLE criticaalbum (
 );
 
 CREATE TABLE editora (
-	nome	 BIGINT,
+	nome	 VARCHAR(50),
 	datafundacao DATE NOT NULL,
 	detalhes	 VARCHAR(512),
 	pais	 VARCHAR(50),
@@ -184,7 +184,7 @@ CREATE TABLE artista_concertos (
 
 CREATE TABLE musica_album (
 	musica_id BIGINT,
-	album_id	 BIGINT NOT NULL,
+	album_id BIGINT NOT NULL,
 	PRIMARY KEY(musica_id)
 );
 
