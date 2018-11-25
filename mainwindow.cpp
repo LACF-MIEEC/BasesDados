@@ -90,6 +90,16 @@ MainWindow::~MainWindow()
 
 void MainWindow::loggedIn(QString username){
 
+    ui->stackedWidget->setCurrentWidget(ui->homePage);
+
+    // hide search widgets
+    ui->details->hide();
+    ui->interGroupBox->hide();
+    ui->musicsGroupBox->hide();
+    ui->albumsGroupBox->hide();
+    ui->concertsGroupBox->hide();
+    ui->playlistsGroupBox->hide();
+
     this->show();
 
     this->findChild<QDialog*>("StartWindow")->deleteLater();

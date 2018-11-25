@@ -11,15 +11,10 @@
     <qresource prefix="/Logos">
         <file alias="MusicLogo">resources/logos/MusicLogo.png</file>
         <file alias="MusicLogoOrange">resources/logos/MusicLogoOrange.png</file>
-        <file>resources/logos/MusicLogoG.png</file>
-        <file>resources/logos/MusicLogoGO.png</file>
-        <file>resources/logos/MusicLogoO.png</file>
-        <file>resources/logos/MusicLogoOG.png</file>
-        <file>resources/logos/MusicLogoWhite.png</file>
-        <file>resources/logos/MusicLogoGreyO.png</file>
-        <file>resources/logos/MusicLogoGreyO2.png</file>
+        <file alias="EntryLogo">resources/logos/MusicLogoGreyO.png</file>
     </qresource>
     <qresource prefix="/Files">
         <file alias="Countries">resources/files/countries.txt</file>
+        <file alias="(Genres)">resources/files/genres.txt</file>
     </qresource>
 </RCC>

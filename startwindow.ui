@@ -152,7 +152,7 @@ QLabel#RegTitle{
    <item row="3" column="0">
     <widget class="QStackedWidget" name="stackedWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="LogPage">
       <layout class="QGridLayout" name="gridLayout">
@@ -168,34 +168,6 @@ QLabel#RegTitle{
        <property name="bottomMargin">
         <number>30</number>
        </property>
-       <item row="1" column="0">
-        <widget class="QLabel" name="Logo">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background: none;</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="pixmap">
-          <pixmap resource="resources.qrc">:/Logos/resources/logos/MusicLogoGreyO2.png</pixmap>
-         </property>
-         <property name="scaledContents">
-          <bool>false</bool>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-         <property name="wordWrap">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
        <item row="1" column="2">
         <widget class="QGroupBox" name="LoginBox">
          <property name="sizePolicy">
@@ -404,7 +376,35 @@ QLabel#RegTitle{
          </layout>
         </widget>
        </item>
-       <item row="0" column="2" alignment="Qt::AlignRight">
+       <item row="1" column="0">
+        <widget class="QLabel" name="Logo">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background: none;</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="resources.qrc">:/Logos/EntryLogo</pixmap>
+         </property>
+         <property name="scaledContents">
+          <bool>false</bool>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+         <property name="wordWrap">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2" alignment="Qt::AlignRight|Qt::AlignTop">
         <widget class="QToolButton" name="DBSettings">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">

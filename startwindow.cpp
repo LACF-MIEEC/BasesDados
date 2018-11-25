@@ -14,7 +14,7 @@ StartWindow::StartWindow(QWidget *parent) :
 
     ui->stackedWidget->setCurrentIndex(0);
 
-    this->setWindowFlags(Qt::SplashScreen);// | Qt::WindowStaysOnTopHint);
+    this->setWindowFlags(Qt::SplashScreen | Qt::WindowStaysOnTopHint);
 
     QFile file(":/Files/Countries");
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)){
