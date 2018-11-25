@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "startwindow.h"
+#include "playlisteditor.h"
+#include "browsemusicdialog.h"
 #include "ui_mainwindow.h"
 
 #include <QSqlDatabase>
@@ -100,7 +102,7 @@ void MainWindow::loggedIn(QString username){
     ui->concertsGroupBox->hide();
     ui->playlistsGroupBox->hide();
 
-    this->show();
+    this->setHidden(false);
 
     this->findChild<QDialog*>("StartWindow")->deleteLater();
 
@@ -238,4 +240,30 @@ void MainWindow::on_searchButton_clicked()
 void MainWindow::on_searchBar_returnPressed()
 {
     on_searchButton_clicked();
+}
+
+void MainWindow::on_playlistsButton_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->playlistsUserPage);
+}
+
+void MainWindow::on_newPrivatePlayList_clicked()
+{
+    PlayListEditor plEditor(this);
+
+    if (plEditor.exec() != QDialog::Accepted){
+
+        return;
+    }
+}
+
+void MainWindow::on_chooseMusicButton_clicked()
+{
+    BrowseMusicDialog dialog(this);
+
+    if (dialog.exec() != QDialog::Accepted){
+
+        return;
+    }
+
 }

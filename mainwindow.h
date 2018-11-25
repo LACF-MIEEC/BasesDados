@@ -32,6 +32,9 @@ private slots:
     void on_filesButton_clicked();
     void on_searchButton_clicked();
     void on_searchBar_returnPressed();
+    void on_playlistsButton_clicked();
+    void on_newPrivatePlayList_clicked();
+    void on_chooseMusicButton_clicked();
 };
 
 #endif // MAINWINDOW_H

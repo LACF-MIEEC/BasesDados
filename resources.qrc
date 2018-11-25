@@ -7,6 +7,16 @@
         <file alias="HomeBlack">resources/icons/HomeBlack.png</file>
         <file alias="HomeWhite">resources/icons/HomeWhite.png</file>
         <file alias="Upload">resources/icons/Upload.png</file>
+        <file alias="PlayListWhite">resources/icons/playlistWhite.gif</file>
+        <file alias="addBlack">resources/icons/addBlack.png</file>
+        <file alias="addWhite">resources/icons/AddWhite.png</file>
+        <file alias="binBlack">resources/icons/binBlack.png</file>
+        <file alias="binWhite">resources/icons/binWhite.png</file>
+        <file alias="followersColors">resources/icons/Get-Followers-On-Instagram-Icon3.png</file>
+        <file alias="pencilWhite">resources/icons/pencilWhite.png</file>
+        <file alias="followersWhite">resources/icons/followersWhite.png</file>
+        <file alias="unfollowBlack">resources/icons/unfollowBlack.png</file>
+        <file alias="unfollowWhite">resources/icons/unfollowWhite.png</file>
     </qresource>
     <qresource prefix="/Logos">
         <file alias="MusicLogo">resources/logos/MusicLogo.png</file>

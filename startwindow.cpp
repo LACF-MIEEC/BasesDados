@@ -131,7 +131,7 @@ void StartWindow::on_DBSettings_clicked()
 {
     QSqlConnectionDialog dialog(this);
     this->setHidden(true);
-    // TODO: Load settings from
+
     if (dialog.exec() != QDialog::Accepted){
         this->setHidden(false);
         return;
