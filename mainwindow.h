@@ -20,6 +20,9 @@ private:
 
     QString currentUser;
 
+    QList<QWidget*> stackedWidgetHistory;
+    int stackedWidgetHistoryIndex;
+
 
 private slots:
     void loggedIn(QString);
@@ -35,6 +38,7 @@ private slots:
     void on_playlistsButton_clicked();
     void on_newPrivatePlayList_clicked();
     void on_chooseMusicButton_clicked();
+    void on_stackedDetails_currentChanged(int arg1);
 };
 
 #endif // MAINWINDOW_H

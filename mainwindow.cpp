@@ -14,6 +14,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->stackedWidget->setCurrentWidget(ui->homePage);
+    stackedWidgetHistory.append(ui->homePage);
+    stackedWidgetHistoryIndex = 0;
 
     if (QSqlDatabase::drivers().isEmpty())
         QMessageBox::information(this, tr("No database drivers found"),
@@ -266,4 +269,10 @@ void MainWindow::on_chooseMusicButton_clicked()
         return;
     }
 
+}
+
+
+void MainWindow::on_stackedDetails_currentChanged(int arg1)
+{
+    //if(stackedWidgetHistory.)
 }
