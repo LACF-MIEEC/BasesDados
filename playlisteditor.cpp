@@ -6,6 +6,8 @@ PlayListEditor::PlayListEditor(QWidget *parent) :
     ui(new Ui::PlayListEditor)
 {
     ui->setupUi(this);
+
+    this->setWindowFlags(Qt::SplashScreen);
 }
 
 PlayListEditor::~PlayListEditor()

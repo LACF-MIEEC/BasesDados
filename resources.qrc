@@ -17,6 +17,9 @@
         <file alias="followersWhite">resources/icons/followersWhite.png</file>
         <file alias="unfollowBlack">resources/icons/unfollowBlack.png</file>
         <file alias="unfollowWhite">resources/icons/unfollowWhite.png</file>
+        <file alias="starEmpty">resources/icons/starEmpty.png</file>
+        <file alias="starFilled">resources/icons/starFilled.png</file>
+        <file alias="starEmptyGreen">resources/icons/starEmptyGreen.png</file>
     </qresource>
     <qresource prefix="/Logos">
         <file alias="MusicLogo">resources/logos/MusicLogo.png</file>

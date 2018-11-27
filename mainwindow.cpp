@@ -2,12 +2,42 @@
 #include "startwindow.h"
 #include "playlisteditor.h"
 #include "browsemusicdialog.h"
+#include "reviewdialog.h"
 #include "ui_mainwindow.h"
 
 #include <QSqlDatabase>
 #include <QtSql>
 #include <QMessageBox>
 #include <QCloseEvent>
+
+const QString searchRule ="|";
+
+const QString musicSearchQuery = "SELECT DISTINCT m.id, m.nome, a.nome, mi.interprete_nome "
+                                 "FROM musica m, musica_album ma, album a, musica_interprete mi "
+                                 "WHERE m.id = ma.musica_id "
+                                 "AND a.id = ma.album_id "
+                                 "AND m.id = mi.musica_id "
+                                 "AND m.nome ~* ?";
+
+const QString albumSearchQuery = "SELECT DISTINCT a.id, a.nome, mi.interprete_nome, to_char(a.datalancamento,'YYYY') "
+                                 "FROM musica m, musica_album ma, album a, musica_interprete mi "
+                                 "WHERE m.id = ma.musica_id "
+                                 "AND a.id = ma.album_id "
+                                 "AND m.id = mi.musica_id "
+                                 "AND a.nome ~* ?";
+
+const QString playlistSearchQuery = "SELECT DISTINCT p.nome, p.utilizador_nick "
+                                    "FROM playlist p "
+                                    "WHERE p.private = false "
+                                    "AND p.nome ~* ?";
+
+const QString interpreterSearchQuery = "SELECT DISTINCT i.nome, i.datainicio "
+                                       "FROM interprete i "
+                                       "WHERE i.nome ~* ?";
+
+const QString concertSearchQuery = "SELECT DISTINCT c.nome, c.data "
+                                   "FROM concerto c "
+                                   "WHERE c.nome ~* ?";
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -17,6 +47,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->stackedWidget->setCurrentWidget(ui->homePage);
     stackedWidgetHistory.append(ui->homePage);
     stackedWidgetHistoryIndex = 0;
+    ui->returnButton->setDisabled(true);
+    ui->fowardButton->setDisabled(true);
 
     if (QSqlDatabase::drivers().isEmpty())
         QMessageBox::information(this, tr("No database drivers found"),
@@ -95,11 +127,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::loggedIn(QString username){
 
-    ui->stackedWidget->setCurrentWidget(ui->homePage);
 
     // hide search widgets
     ui->details->hide();
-    ui->interGroupBox->hide();
+    ui->interpGroupBox->hide();
     ui->musicsGroupBox->hide();
     ui->albumsGroupBox->hide();
     ui->concertsGroupBox->hide();
@@ -137,6 +168,7 @@ void MainWindow::loggedIn(QString username){
     }else
         qDebug() << "ERROR: " << query.lastError();
 
+    configureAllSqlTableView();
     refreshAll();
 
     query.finish();
@@ -223,31 +255,46 @@ void MainWindow::refreshUserPanel(){
 
 void MainWindow::on_homeButton_clicked()
 {
-    ui->stackedWidget->setCurrentWidget(ui->homePage);
+    if(ui->stackedWidget->currentWidget() != (ui->homePage))
+        setCurrentPage(ui->homePage);
+
 }
 
 void MainWindow::on_filesButton_clicked()
 {
-    ui->stackedWidget->setCurrentWidget(ui->uploadsPage);
+    if(ui->stackedWidget->currentWidget() != (ui->uploadsPage))
+        setCurrentPage(ui->uploadsPage);
 }
 
 void MainWindow::on_searchButton_clicked()
 {
-    ui->stackedWidget->setCurrentWidget(ui->searchPage);
+    QStringList keywords = ui->searchBar->text().split(" ", QString::SkipEmptyParts);
 
-    QStringList searchWords = ui->searchBar->text().split(" ", QString::SkipEmptyParts);
+    if(!keywords.isEmpty()){
+        int totalFound = 0;
 
-    //PERFORM SEARCH FOR RELATED WORDS
+        totalFound += searchMusic(keywords);
+        totalFound += searchAlbum(keywords);
+        totalFound += searchPlaylist(keywords);
+        totalFound += searchConcert(keywords);
+        totalFound += searchInterpreter(keywords);
+
+        if(totalFound > 0)
+            setCurrentPage(ui->searchPage);
+
+        qDebug() << "Search Found " << totalFound << " results for: " << keywords;
+    }
+}
+
+void MainWindow::on_playlistsButton_clicked()
+{
+    if(ui->stackedWidget->currentWidget() != ui->playlistsUserPage)
+        setCurrentPage(ui->playlistsUserPage);
 }
 
 void MainWindow::on_searchBar_returnPressed()
 {
     on_searchButton_clicked();
-}
-
-void MainWindow::on_playlistsButton_clicked()
-{
-    ui->stackedWidget->setCurrentWidget(ui->playlistsUserPage);
 }
 
 void MainWindow::on_newPrivatePlayList_clicked()
@@ -271,8 +318,308 @@ void MainWindow::on_chooseMusicButton_clicked()
 
 }
 
-
-void MainWindow::on_stackedDetails_currentChanged(int arg1)
+void MainWindow::on_reviewAlbumButton_clicked()
 {
-    //if(stackedWidgetHistory.)
+    ReviewDialog dialog(this);
+
+    if (dialog.exec() != QDialog::Accepted){
+
+        return;
+    }
+}
+
+void MainWindow::on_returnButton_clicked()
+{
+    stackedWidgetHistoryIndex--;
+    ui->fowardButton->setDisabled(false);
+    qDebug() << "FowardEnabled";
+    qDebug() << "History: " << stackedWidgetHistoryIndex+1 << " of " << stackedWidgetHistory.size();
+
+    if(stackedWidgetHistoryIndex == 0){
+        ui->returnButton->setDisabled(true);
+         qDebug() << "ReturnDisabled";
+    }
+    ui->stackedWidget->setCurrentWidget(stackedWidgetHistory.at(stackedWidgetHistoryIndex));
+
+}
+
+void MainWindow::on_fowardButton_clicked()
+{
+    stackedWidgetHistoryIndex++;
+    ui->returnButton->setDisabled(false);
+    qDebug() << "ReturnEnabled";
+    qDebug() << "History: " << stackedWidgetHistoryIndex+1 << " of " << stackedWidgetHistory.size();
+    if(stackedWidgetHistoryIndex+1 == stackedWidgetHistory.size()){
+        ui->fowardButton->setDisabled(true);
+        qDebug() << "FowardDisabled";
+    }
+    ui->stackedWidget->setCurrentWidget(stackedWidgetHistory.at(stackedWidgetHistoryIndex));
+}
+
+void MainWindow::setCurrentPage(QWidget* page)
+{
+    ui->returnButton->setDisabled(false);
+    ui->fowardButton->setDisabled(true);
+    stackedWidgetHistory = stackedWidgetHistory.mid(0,stackedWidgetHistoryIndex+1);
+    stackedWidgetHistoryIndex++;
+    stackedWidgetHistory.append(page);
+    ui->stackedWidget->setCurrentWidget(page);
+
+}
+
+void MainWindow::on_musicTableView_clicked(const QModelIndex &index)
+{
+    ui->musicTableView->setColumnHidden(0, false);
+    int musicID = ui->musicTableView->model()->itemData(index.siblingAtColumn(0)).value(0,-1).toInt();
+    ui->musicTableView->setColumnHidden(0, true);
+    QSqlDatabase db = QSqlDatabase::database();
+    QSqlQuery query(db);
+
+    // Get Music Data
+    query.prepare("SELECT m.nome, a.nome, i.nome, c.interprete_nome, g.genero_tipo, m.data, m.duracao, m.letra "
+                  "FROM musica m, musica_album ma, album a, musica_interprete mi, interprete i, musica_genero g, musica_musico mc, musico c "
+                  "WHERE m.id = ma.musica_id "
+                  "AND a.id = ma.album_id "
+                  "AND m.id = mi.musica_id "
+                  "AND i.nome = mi.interprete_nome "
+                  "AND i.datainicio = mi.interprete_datainicio "
+                  "AND m.id = g.musica_id "
+                  "AND m.id = mc.musica_id "
+                  "AND c.interprete_nome = mc.musico_interprete_nome "
+                  "AND c.interprete_datainicio = mc.musico_interprete_datainicio "
+                  "AND m.id = :musicID");
+    query.bindValue(":musicID", musicID);
+    query.exec();
+    query.first();
+
+    ui->NameImageMusic->setText(query.value(0).toString());
+    ui->albumMusicPage->setText(query.value(1).toString());
+    ui->interpMusicPage->setText(query.value(2).toString());
+    ui->authorMusicPage->setText(query.value(3).toString());
+    ui->genreMusicPage->setText(query.value(4).toString());
+    ui->yearMusicPage->setText(QString::number(query.value(5).toDate().year()));
+    ui->durationMusicPage->setText(query.value(6).toDateTime().toString("h:mm:ss"));
+    ui->lyricsMusicPage->setText(query.value(7).toString());
+
+    query.prepare("SELECT u.nick, r.critica_pontuacao, r.critica_justificacao "
+                  "FROM utilizador u, criticamusica r "
+                  "WHERE u.nick = r.critica_utilizador_nick "
+                  "AND musica_id = :musicID");
+    query.bindValue(":musicID", musicID);
+    query.exec();
+
+    QSqlQueryModel* model = qobject_cast<QSqlQueryModel *>(ui->reviewsMusicTableView->model());
+    model->setQuery(query);
+    model->setHeaderData(0, Qt::Horizontal, tr("User"));
+    model->setHeaderData(1, Qt::Horizontal, tr("Score"));
+    model->setHeaderData(2, Qt::Horizontal, tr("Comment"));
+
+    setCurrentPage(ui->musicPage);
+
+}
+
+
+int MainWindow::searchMusic(QStringList keywords){
+    QSqlQueryModel* model = qobject_cast<QSqlQueryModel *>(ui->musicTableView->model());
+
+    QSqlQuery *query = buildSearchQuery(musicSearchQuery, keywords);
+    if(query->exec()){
+        model->setQuery(*query);
+        if(model->rowCount() > 0){
+            model->setHeaderData(0, Qt::Horizontal, tr("ID"));
+            model->setHeaderData(1, Qt::Horizontal, tr("Name"));
+            model->setHeaderData(2, Qt::Horizontal, tr("Album"));
+            model->setHeaderData(3, Qt::Horizontal, tr("Interpreter"));
+            ui->musicTableView->setColumnHidden(0, true);
+            ui->musicsGroupBox->setVisible(true);
+            qDebug() << "Search Found " << model->rowCount() << " musics for : " << keywords;
+        }
+        else ui->musicsGroupBox->setVisible(false);
+
+//        qDebug() << "QUERY: " << query->lastQuery();
+    }else qDebug() << "ERROR exec: " << query->lastError();
+
+    return model->rowCount();
+}
+
+int MainWindow::searchAlbum(QStringList keywords){
+
+    QSqlQueryModel* model = qobject_cast<QSqlQueryModel *>(ui->albumsTableView->model());
+
+    QSqlQuery *query = buildSearchQuery(albumSearchQuery, keywords);
+    if(query->exec()){
+        model->setQuery(*query);
+        if(model->rowCount() > 0){
+            model->setHeaderData(0, Qt::Horizontal, tr("ID"));
+            model->setHeaderData(1, Qt::Horizontal, tr("Name"));
+            model->setHeaderData(2, Qt::Horizontal, tr("Interpreter"));
+            model->setHeaderData(3, Qt::Horizontal, tr("Year"));
+            ui->albumsTableView->setColumnHidden(0, true);
+            ui->albumsGroupBox->setVisible(true);
+            qDebug() << "Search Found " << model->rowCount() << " albums for : " << keywords;
+        }
+        else ui->albumsGroupBox->setVisible(false);
+
+        //qDebug() << "QUERY: " << query->lastQuery();
+    }else qDebug() << "ERROR exec: " << query->lastError();
+
+    return model->rowCount();
+}
+
+int MainWindow::searchInterpreter(QStringList keywords){
+    QSqlQueryModel* model = qobject_cast<QSqlQueryModel *>(ui->interpTableView->model());
+
+    QSqlQuery *query = buildSearchQuery(interpreterSearchQuery, keywords);
+    if(query->exec()){
+        model->setQuery(*query);
+        if(model->rowCount() > 0){
+            model->setHeaderData(0, Qt::Horizontal, tr("Name"));
+            model->setHeaderData(1, Qt::Horizontal, tr("Date"));
+            ui->interpTableView->setColumnHidden(1, true);
+            ui->interpGroupBox->setVisible(true);
+            qDebug() << "Search Found " << model->rowCount() << " interpreters for : " << keywords;
+        }
+        else ui->interpGroupBox->setVisible(false);
+
+//        qDebug() << "QUERY: " << query->lastQuery();
+    }else qDebug() << "ERROR exec: " << query->lastError();
+
+    return model->rowCount();
+}
+
+int MainWindow::searchPlaylist(QStringList keywords){
+    QSqlQueryModel* model = qobject_cast<QSqlQueryModel *>(ui->playlistsTableView->model());
+
+    QSqlQuery *query = buildSearchQuery(playlistSearchQuery, keywords);
+    if(query->exec()){
+        model->setQuery(*query);
+        if(model->rowCount() > 0){
+            model->setHeaderData(0, Qt::Horizontal, tr("Name"));
+            model->setHeaderData(1, Qt::Horizontal, tr("User"));
+            ui->playlistsGroupBox->setVisible(true);
+            qDebug() << "Search Found " << model->rowCount() << " playlists for : " << keywords;
+        }
+        else ui->playlistsGroupBox->setVisible(false);
+
+        //qDebug() << "QUERY: " << query->lastQuery();
+
+    }else qDebug() << "ERROR exec: " << query->lastError();
+
+    return model->rowCount();
+}
+
+int MainWindow::searchConcert(QStringList keywords){
+    QSqlQueryModel* model = qobject_cast<QSqlQueryModel *>(ui->concertsTableView->model());
+
+    QSqlQuery *query = buildSearchQuery(concertSearchQuery, keywords);
+    if(query->exec()){
+        model->setQuery(*query);
+        if(model->rowCount() > 0){
+            model->setHeaderData(0, Qt::Horizontal, tr("Name"));
+            model->setHeaderData(1, Qt::Horizontal, tr("Date"));
+            ui->concertsGroupBox->setVisible(true);
+        }
+        else ui->concertsGroupBox->setVisible(false);
+//        qDebug() << "QUERY: " << query->lastQuery();
+        qDebug() << "Search Found " << model->rowCount() << " concert for : " << keywords;
+    }else qDebug() << "ERROR exec: " << query->lastError();
+
+    return model->rowCount();
+}
+
+QSqlQuery *MainWindow::buildSearchQuery(QString searchQuery, QStringList keywords)
+{
+    QSqlQuery *query =new QSqlQuery(QSqlDatabase::database());
+
+    query->prepare(searchQuery);
+
+    query->addBindValue(keywords.join(searchRule));
+
+    return query;
+}
+
+
+
+void MainWindow::configureAllSqlTableView(){
+
+    QList<bool> hidden;
+    QList<QStringList> relations;
+    QStringList relation;
+
+    ui->musicTableView->setModel(new QSqlQueryModel(ui->musicTableView));
+    ui->albumsTableView->setModel(new QSqlQueryModel(ui->albumsTableView));
+    ui->playlistsTableView->setModel(new QSqlQueryModel(ui->playlistsTableView));
+    ui->concertsTableView->setModel(new QSqlQueryModel(ui->concertsTableView));
+    ui->interpTableView->setModel(new QSqlQueryModel(ui->interpTableView));
+
+
+    ui->reviewsMusicTableView->setModel(new QSqlQueryModel(ui->reviewsMusicTableView));
+
+    hidden.clear();
+    relation.clear();
+
+    hidden << true << true << false << false <<false;
+    relation << "album" << "musica_id" << "album_id";
+    relations.append(relation);
+
+
+
+
+
+
+
+//    //SearchPage
+//    //TODO add relations
+
+
+//    relations.clear();
+//    relation.clear();
+//    relation << "album" << "musica_id" << "album_id";
+//    relations.append(relation);
+//    relation.clear();
+//    relation << "album" << "id" << "nome";
+//    relations.append(relation);
+//    musicSearchModel = configureSqlRelationalTableView(ui->musicTableView,"musica", &hidden, &relations);
+
+
+//    configureSqlRelationalTableView(ui->albumsTableView,"album");
+//    configureSqlRelationalTableView(ui->interpTableView,"interprete");
+//    configureSqlRelationalTableView(ui->playlistsTableView,"playlist");
+//    configureSqlRelationalTableView(ui->concertsTableView,"concerto");
+
+//    //homePage
+//    configureSqlRelationalTableView(ui->RecentRevTableView,"critica");
+//    configureSqlRelationalTableView(ui->playlistsTableView_2,"playlist");
+
+
+//    hidden.clear();
+//    hidden << false << false << true;
+//    configureSqlRelationalTableView(ui->RegTableView,"registoacesso", &hidden);
+
+}
+
+QSqlRelationalTableModel* MainWindow::configureSqlRelationalTableView(QTableView *view, QString table, QList<bool> *hiden, QList<QStringList> *relations)
+{
+    QSqlRelationalTableModel *model = new QSqlRelationalTableModel(this,QSqlDatabase::database());
+    model->setEditStrategy(QSqlRelationalTableModel::OnManualSubmit);
+    model->setTable(QSqlDatabase::database().driver()->escapeIdentifier(table, QSqlDriver::TableName));
+    model->select();
+
+    if (model->lastError().type() != QSqlError::NoError)
+        qDebug() << "ERROR " << model->lastError().text() << " Table: ";
+
+    view->setModel(model);
+    view->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    //hide collumns
+    if(hiden != nullptr)
+        for(int i=0; i<model->columnCount() && i<hiden->size()  ;i ++){
+                view->setColumnHidden(i, hiden->at(i));
+        }
+
+    //Set relations
+    if(relations != nullptr)
+        for(int i=0; i<model->columnCount() && i<relations->size()  ;i ++)
+            if(!relations->at(i).at(0).contains("-1"))
+                model->setRelation(i, QSqlRelation(relations->at(i).at(0), relations->at(i).at(1), relations->at(i).at(2)));
+    return model;
 }

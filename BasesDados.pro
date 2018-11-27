@@ -31,14 +31,16 @@ SOURCES += \
     startwindow.cpp \
     qsqlconnectiondialog.cpp \
     browsemusicdialog.cpp \
-    playlisteditor.cpp
+    playlisteditor.cpp \
+    reviewdialog.cpp
 
 HEADERS += \
         mainwindow.h \
     startwindow.h \
     qsqlconnectiondialog.h \
     browsemusicdialog.h \
-    playlisteditor.h
+    playlisteditor.h \
+    reviewdialog.h
 
 FORMS += \
         mainwindow.ui \
@@ -47,7 +49,8 @@ FORMS += \
     startwindow.ui \
     playlisteditor.ui \
     browsemusicdialog.ui \
-    playlisteditor.ui
+    playlisteditor.ui \
+    reviewdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

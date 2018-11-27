@@ -8,7 +8,7 @@ QSqlConnectionDialog::QSqlConnectionDialog(QWidget *parent)
 {
     ui.setupUi(this);
 
-    this->setWindowFlags(Qt::SplashScreen | Qt::WindowStaysOnTopHint);
+    this->setWindowFlags(Qt::SplashScreen);
 
     QStringList drivers = QSqlDatabase::drivers();
 

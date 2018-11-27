@@ -6,6 +6,8 @@ BrowseMusicDialog::BrowseMusicDialog(QWidget *parent) :
     ui(new Ui::BrowseMusicDialog)
 {
     ui->setupUi(this);
+
+    this->setWindowFlags(Qt::SplashScreen);
 }
 
 BrowseMusicDialog::~BrowseMusicDialog()
