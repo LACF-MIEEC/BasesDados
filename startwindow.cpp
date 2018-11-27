@@ -4,10 +4,13 @@
 #include "ui_startwindow.h"
 #include "qsqlconnectiondialog.h"
 #include "search.h"
+#include "musicinfo.h"
+
 
 #include <QMessageBox>
 #include <QSqlQuery>
-
+#include <QFile>
+#include <QTextStream>
 
 StartWindow::StartWindow(QWidget *parent) :
     QDialog(parent),
@@ -63,11 +66,22 @@ void StartWindow::on_LogInButton_clicked()
     if(ui->RememberCheck->isChecked()){
         //Save Credentials into file?
     }
+    //open file
+    QFile file ("D:/UC Dylan/3º ano 1º semestre/BD/Project/BasesDados/username.txt");
+    file.open(QFile::WriteOnly);
 
-     this->hide();
-     MainWindow w;
-     w.setModal(true);
-     w.exec();
+    // write username into
+    QTextStream out(&file);
+    out << username;
+    file.flush();
+
+    // close file
+    file.close();
+
+    this->hide();
+    MainWindow w;
+    w.setModal(true);
+    w.exec();
 }
 
 void StartWindow::on_RegisterButton_clicked()

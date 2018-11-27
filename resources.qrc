@@ -6,10 +6,13 @@
     <qresource prefix="/Logos">
         <file alias="MusicLogo">resources/logos/MusicLogo.png</file>
         <file alias="MusicLogoOrange">resources/logos/MusicLogoOrange.png</file>
+        <file>resources/logos/MusicLogo2.png</file>
+        <file>resources/logos/album.jpg</file>
+        <file>resources/logos/album2.png</file>
     </qresource>
     <qresource prefix="/"/>
     <qresource prefix="/Backgrounds">
-        <file>resources/backgrounds/main_menu.png</file>
+        <file alias="backgreound main menu">resources/backgrounds/main_menu.png</file>
         <file>resources/backgrounds/searchimage.jpg</file>
     </qresource>
 </RCC>

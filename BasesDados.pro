@@ -33,7 +33,10 @@ SOURCES += \
     myprofile.cpp \
     mainwindow.cpp \
     qhoversensitivebutton.cpp \
-    search.cpp
+    search.cpp \
+    musicinfo.cpp \
+    musicreview.cpp \
+    albuminfo.cpp
 
 HEADERS += \
     startwindow.h \
@@ -43,7 +46,9 @@ HEADERS += \
     mainwindow.h \
     qhoversensitivebutton.h \
     search.h \
-    globals.h
+    musicinfo.h \
+    musicreview.h \
+    albuminfo.h
 
 FORMS += \
     startwindow.ui \
@@ -51,7 +56,10 @@ FORMS += \
     register.ui \
     myprofile.ui \
     mainwindow.ui \
-    search.ui
+    search.ui \
+    musicinfo.ui \
+    musicreview.ui \
+    albuminfo.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

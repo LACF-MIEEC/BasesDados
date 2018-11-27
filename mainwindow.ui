@@ -81,7 +81,7 @@
    <bool>false</bool>
   </property>
   <property name="modal">
-   <bool>false</bool>
+   <bool>true</bool>
   </property>
   <widget class="QLabel" name="BackGround">
    <property name="geometry">

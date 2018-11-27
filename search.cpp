@@ -1,13 +1,14 @@
 #include "search.h"
 #include "ui_search.h"
-#include "globals.h"
 #include "startwindow.h"
 #include "mainwindow.h"
+#include "musicinfo.h"
 
 #include <QSqlDatabase>
 #include <QtWidgets>
 #include <QtSql>
 #include <QMessageBox>
+#include <QThread>
 
 // Global variables on this frame
 
@@ -82,6 +83,8 @@ void Search::on_SearchB_clicked()
 
 void Search::on_table_doubleClicked(const QModelIndex &index)
 {
+    MusicInfo sw;
+
 
     // Double click on 1st column
     if (index.column()==0){
@@ -90,10 +93,14 @@ void Search::on_table_doubleClicked(const QModelIndex &index)
         val[1] = ui->table->model()->data(index1).toString();
         QModelIndex index2 = index.sibling(index.row(), index.column()+2);
         val[2] = ui->table->model()->data(index2).toString();
-        qDebug() << val[0];
-        qDebug() << val[1];
-        qDebug() << val[2];
-    //return;
+
+        // connect with 'MusicInfo' frame
+        connect(this, &Search::sendParams, &sw, &MusicInfo::receive);
+        emit sendParams(val);
+
+        this->hide();
+        sw.setModal(true);
+        sw.exec();
     }
     // Double click on 2nd column
     else if(index.column()==1){
@@ -102,9 +109,11 @@ void Search::on_table_doubleClicked(const QModelIndex &index)
         val[2] = ui->table->model()->data(index1).toString();
         QModelIndex index2 = index.sibling(index.row(), index.column()-1);
         val[0] = ui->table->model()->data(index2).toString();
-        qDebug() << val[0];
-        qDebug() << val[1];
-        qDebug() << val[2];
+        connect(this, &Search::sendParams, &sw, &MusicInfo::receive);
+        emit sendParams(val);
+        this->hide();
+        sw.setModal(true);
+        sw.exec();
     }
     // Double click on 3rd column
     else if(index.column()==2){
@@ -113,9 +122,11 @@ void Search::on_table_doubleClicked(const QModelIndex &index)
         val[1] = ui->table->model()->data(index1).toString();
         QModelIndex index2 = index.sibling(index.row(), index.column()-2);
         val[0] = ui->table->model()->data(index2).toString();
-        qDebug() << val[0];
-        qDebug() << val[1];
-        qDebug() << val[2];
+        connect(this, &Search::sendParams, &sw, &MusicInfo::receive);
+        emit sendParams(val);
+        this->hide();
+        sw.setModal(true);
+        sw.exec();
     }
 }
 

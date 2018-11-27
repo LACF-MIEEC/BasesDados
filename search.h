@@ -2,6 +2,8 @@
 #define SEARCH_H
 
 #include <QDialog>
+#include <QString>
+#include <QObject>
 
 namespace Ui {
 class Search;
@@ -14,6 +16,10 @@ class Search : public QDialog
 public:
     explicit Search(QWidget *parent = nullptr);
     ~Search();
+    QString val[3];
+
+signals:
+    void sendParams(QString s[3]);
 
 private slots:
     void on_SearchB_clicked();
@@ -23,7 +29,7 @@ private slots:
     void on_pushButton_clicked();
 
 private:
-    Ui::Search *ui;
+    Ui::Search *ui;    
 };
 
 #endif // SEARCH_H

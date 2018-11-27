@@ -59,6 +59,8 @@ private slots:
 
     void on_DBSettings_clicked();
 
+signals:
+    void send_user(QString user);
 private:
     Ui::StartWindow *ui;
 };
