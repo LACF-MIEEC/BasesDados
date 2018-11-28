@@ -26,6 +26,7 @@ private:
     QList<QWidget*> stackedWidgetHistory;
     int stackedWidgetHistoryIndex;
 
+
 private slots:
     void loggedIn(QString);
     void closeEvent(QCloseEvent *event);
@@ -50,6 +51,8 @@ private slots:
     void closeAllViews();
     void configureAllSqlTableView();
 
+    void refreshPlaylistEditorBrowser(QStringList keywords);
+    void addPlayList();
 
     void on_homeButton_clicked();
     void on_filesButton_clicked();
@@ -64,6 +67,8 @@ private slots:
     void on_fowardButton_clicked();
     void on_musicTableView_clicked(const QModelIndex &index);
     void on_reviewMusicButton_clicked();
+    void on_newPublicPlayList_clicked();
+    void on_editPrivatePlaylist_clicked();
 };
 
 #endif // MAINWINDOW_H

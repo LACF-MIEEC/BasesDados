@@ -15,6 +15,11 @@ public:
     explicit BrowseMusicDialog(QWidget *parent = nullptr);
     ~BrowseMusicDialog();
 
+private slots:
+    void on_buttonBox_accepted();
+
+    void on_buttonBox_rejected();
+
 private:
     Ui::BrowseMusicDialog *ui;
 };

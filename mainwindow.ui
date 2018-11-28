@@ -20,7 +20,7 @@
    <string>Music Database</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="resources.qrc">
+   <iconset>
     <normaloff>:/Logos/MusicLogoOrange</normaloff>:/Logos/MusicLogoOrange</iconset>
   </property>
   <property name="styleSheet">
@@ -172,7 +172,7 @@ QScrollBar::sub-line {
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="resources.qrc">
+          <iconset>
            <normaloff>:/Icons/HomeWhite</normaloff>:/Icons/HomeWhite</iconset>
          </property>
          <property name="iconSize">
@@ -204,7 +204,7 @@ QScrollBar::sub-line {
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="resources.qrc">
+          <iconset>
            <normaloff>:/Icons/Upload</normaloff>:/Icons/Upload</iconset>
          </property>
          <property name="iconSize">
@@ -221,7 +221,7 @@ QScrollBar::sub-line {
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="resources.qrc">
+          <iconset>
            <normaloff>:/Icons/PlayListWhite</normaloff>:/Icons/PlayListWhite</iconset>
          </property>
          <property name="iconSize">
@@ -278,7 +278,7 @@ QScrollBar::sub-line {
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="resources.qrc">
+          <iconset>
            <normaloff>:/Icons/SearchWhite</normaloff>:/Icons/SearchWhite</iconset>
          </property>
          <property name="iconSize">
@@ -309,7 +309,7 @@ QScrollBar::sub-line {
     <item row="5" column="1">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>9</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="homePage">
        <layout class="QGridLayout" name="gridLayout_2">
@@ -587,8 +587,8 @@ QScrollBar::sub-line {
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>280</width>
-                <height>203</height>
+                <width>275</width>
+                <height>79</height>
                </rect>
               </property>
               <layout class="QGridLayout" name="gridLayout_6">
@@ -638,7 +638,7 @@ QScrollBar::sub-line {
               <string/>
              </property>
              <property name="pixmap">
-              <pixmap resource="resources.qrc">:/Logos/MusicLogoOrange</pixmap>
+              <pixmap>:/Logos/MusicLogoOrange</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -734,8 +734,8 @@ QScrollBar::sub-line {
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>565</width>
-                <height>695</height>
+                <width>83</width>
+                <height>218</height>
                </rect>
               </property>
               <layout class="QGridLayout" name="gridLayout_5">
@@ -835,8 +835,8 @@ QScrollBar::sub-line {
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>274</width>
-                <height>705</height>
+                <width>65</width>
+                <height>70</height>
                </rect>
               </property>
               <layout class="QGridLayout" name="gridLayout_15">
@@ -1118,8 +1118,8 @@ QScrollBar::sub-line {
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>273</width>
-                <height>705</height>
+                <width>65</width>
+                <height>70</height>
                </rect>
               </property>
               <layout class="QGridLayout" name="gridLayout_14">
@@ -1556,8 +1556,8 @@ QScrollBar::sub-line {
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>300</width>
-                      <height>452</height>
+                      <width>295</width>
+                      <height>344</height>
                      </rect>
                     </property>
                     <layout class="QGridLayout" name="gridLayout_16">
@@ -2201,7 +2201,7 @@ QScrollBar::sub-line {
                        <string>...</string>
                       </property>
                       <property name="icon">
-                       <iconset resource="resources.qrc">
+                       <iconset>
                         <normaloff>:/Icons/unfollowWhite</normaloff>:/Icons/unfollowWhite</iconset>
                       </property>
                       <property name="iconSize">
@@ -2869,8 +2869,8 @@ QScrollBar::sub-line {
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>569</width>
-               <height>736</height>
+               <width>264</width>
+               <height>613</height>
               </rect>
              </property>
              <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -3398,7 +3398,7 @@ QScrollBar::sub-line {
                     <string>...</string>
                    </property>
                    <property name="icon">
-                    <iconset resource="resources.qrc">
+                    <iconset>
                      <normaloff>:/Icons/addWhite</normaloff>:/Icons/addWhite</iconset>
                    </property>
                    <property name="iconSize">
@@ -3415,7 +3415,7 @@ QScrollBar::sub-line {
                     <string/>
                    </property>
                    <property name="icon">
-                    <iconset resource="resources.qrc">
+                    <iconset>
                      <normaloff>:/Icons/followersWhite</normaloff>:/Icons/followersWhite</iconset>
                    </property>
                    <property name="iconSize">
@@ -3432,7 +3432,7 @@ QScrollBar::sub-line {
                     <string>...</string>
                    </property>
                    <property name="icon">
-                    <iconset resource="resources.qrc">
+                    <iconset>
                      <normaloff>:/Icons/pencilWhite</normaloff>:/Icons/pencilWhite</iconset>
                    </property>
                    <property name="iconSize">
@@ -3449,7 +3449,7 @@ QScrollBar::sub-line {
                     <string/>
                    </property>
                    <property name="icon">
-                    <iconset resource="resources.qrc">
+                    <iconset>
                      <normaloff>:/Icons/binWhite</normaloff>:/Icons/binWhite</iconset>
                    </property>
                    <property name="iconSize">
@@ -3556,7 +3556,7 @@ QScrollBar::sub-line {
                     <string>...</string>
                    </property>
                    <property name="icon">
-                    <iconset resource="resources.qrc">
+                    <iconset>
                      <normaloff>:/Icons/addWhite</normaloff>:/Icons/addWhite</iconset>
                    </property>
                    <property name="iconSize">
@@ -3573,7 +3573,7 @@ QScrollBar::sub-line {
                     <string>...</string>
                    </property>
                    <property name="icon">
-                    <iconset resource="resources.qrc">
+                    <iconset>
                      <normaloff>:/Icons/pencilWhite</normaloff>:/Icons/pencilWhite</iconset>
                    </property>
                    <property name="iconSize">
@@ -3590,7 +3590,7 @@ QScrollBar::sub-line {
                     <string/>
                    </property>
                    <property name="icon">
-                    <iconset resource="resources.qrc">
+                    <iconset>
                      <normaloff>:/Icons/binWhite</normaloff>:/Icons/binWhite</iconset>
                    </property>
                    <property name="iconSize">
@@ -3671,7 +3671,7 @@ QScrollBar::sub-line {
                  <string>...</string>
                 </property>
                 <property name="icon">
-                 <iconset resource="resources.qrc">
+                 <iconset>
                   <normaloff>:/Icons/unfollowWhite</normaloff>:/Icons/unfollowWhite</iconset>
                 </property>
                 <property name="iconSize">
@@ -5289,8 +5289,6 @@ Paredes de Coura 2019</string>
   <tabstop>NotificationsScrol</tabstop>
   <tabstop>regTableView</tabstop>
  </tabstops>
- <resources>
-  <include location="resources.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

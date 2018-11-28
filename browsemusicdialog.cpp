@@ -14,3 +14,13 @@ BrowseMusicDialog::~BrowseMusicDialog()
 {
     delete ui;
 }
+
+void BrowseMusicDialog::on_buttonBox_accepted()
+{
+    this->accepted();
+}
+
+void BrowseMusicDialog::on_buttonBox_rejected()
+{
+    this->reject();
+}

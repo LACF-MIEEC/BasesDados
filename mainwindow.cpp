@@ -10,6 +10,7 @@
 #include <QMessageBox>
 #include <QCloseEvent>
 #include <QDateTime>
+
 const QString searchRule ="|";
 
 const QString musicSearchQuery = "SELECT DISTINCT m.id, m.nome, a.nome, mi.interprete_nome "
@@ -114,6 +115,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     configureAllSqlTableView();
 
+
     StartWindow *sw = new StartWindow(this);
     connect(sw,SIGNAL(acceptedUser(QString)),this,SLOT(loggedIn(QString)));
     connect(sw, SIGNAL(rejected()),this,SLOT(close()));
@@ -127,6 +129,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+// LogInOut
 void MainWindow::loggedIn(QString username){
 
 
@@ -175,7 +178,6 @@ void MainWindow::loggedIn(QString username){
     this->show();
 
 }
-
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     if(!currentUser.isEmpty()){
@@ -217,6 +219,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     event->accept();
 }
 
+// refresh
 void MainWindow::refreshUserPanel(){
 
     ui->UserInfoBox->setTitle(currentUser);
@@ -252,7 +255,6 @@ void MainWindow::refreshUserPanel(){
     qobject_cast<QSqlQueryModel *>(ui->regTableView->model())->setQuery(query);
 
 }
-
 void MainWindow::refreshNotifications(){
     QSqlDatabase db = QSqlDatabase::database();
     QSqlQuery *query = new QSqlQuery(db);
@@ -277,7 +279,6 @@ void MainWindow::refreshNotifications(){
     query->exec();
     qobject_cast<QSqlQueryModel *>(ui->readNotifTableView->model())->setQuery(*query);
 }
-
 void MainWindow::refreshFiles(){
     QSqlDatabase db = QSqlDatabase::database();
     QSqlQuery *query = new QSqlQuery(db);
@@ -303,7 +304,6 @@ void MainWindow::refreshFiles(){
     qobject_cast<QSqlQueryModel *>(ui->sharedFilesTableView->model())->setQuery(*query);
 
 }
-
 void MainWindow::refreshPlaylists(){
     QSqlDatabase db = QSqlDatabase::database();
     QSqlQuery *query = new QSqlQuery(db);
@@ -336,6 +336,36 @@ void MainWindow::refreshPlaylists(){
     qobject_cast<QSqlQueryModel *>(ui->followingTableView->model())->setQuery(*query);
 }
 
+// set Page
+void MainWindow::setCurrentPage(QWidget* page)
+{
+    ui->returnButton->setDisabled(false);
+    ui->fowardButton->setDisabled(true);
+    stackedWidgetHistory = stackedWidgetHistory.mid(0,stackedWidgetHistoryIndex+1);
+    stackedWidgetHistoryIndex++;
+    stackedWidgetHistory.append(page);
+    ui->stackedWidget->setCurrentWidget(page);
+
+}
+// Server Time
+QDateTime* MainWindow::getServerTime(){
+
+    QSqlDatabase db = QSqlDatabase::database();
+    QSqlQuery query(db);
+    QDateTime *timestamp = new QDateTime;
+
+    // Get Timestamp
+    query.prepare("SELECT current_timestamp");
+    query.exec();
+    query.first();
+    *timestamp = query.value(0).toDateTime();
+    query.finish();
+    query.clear();
+
+    return timestamp;
+}
+
+//Main Pages
 void MainWindow::on_homeButton_clicked()
 {
     refreshNotifications();
@@ -343,14 +373,12 @@ void MainWindow::on_homeButton_clicked()
         setCurrentPage(ui->homePage);
 
 }
-
 void MainWindow::on_filesButton_clicked()
 {
     refreshFiles();
     if(ui->stackedWidget->currentWidget() != (ui->uploadsPage))
         setCurrentPage(ui->uploadsPage);
 }
-
 void MainWindow::on_searchButton_clicked()
 {
     QStringList keywords = ui->searchBar->text().split(" ", QString::SkipEmptyParts);
@@ -370,100 +398,16 @@ void MainWindow::on_searchButton_clicked()
         qDebug() << "Search Found " << totalFound << " results for: " << keywords;
     }
 }
-
 void MainWindow::on_playlistsButton_clicked()
 {
     refreshPlaylists();
     if(ui->stackedWidget->currentWidget() != ui->playlistsUserPage)
         setCurrentPage(ui->playlistsUserPage);
 }
-
 void MainWindow::on_searchBar_returnPressed()
 {
     on_searchButton_clicked();
 }
-
-void MainWindow::on_newPrivatePlayList_clicked()
-{
-    PlayListEditor plEditor(this);
-
-    if (plEditor.exec() != QDialog::Accepted){
-
-        return;
-    }
-}
-
-void MainWindow::on_chooseMusicButton_clicked()
-{
-    BrowseMusicDialog dialog(this);
-
-    if (dialog.exec() != QDialog::Accepted){
-
-        return;
-    }
-
-}
-
-void MainWindow::on_reviewAlbumButton_clicked()
-{
-    ReviewDialog dialog(this);
-
-    if (dialog.exec() != QDialog::Accepted){
-
-        QSqlDatabase db = QSqlDatabase::database();
-        QSqlQuery query(db);
-
-        int score = dialog.getScore();
-        QString review = dialog.getReview();
-
-        QDateTime timestamp = *getServerTime();
-
-        query.prepare("INSERT INTO criticaalbum(album_id, critica_data, critica_pontuacao, critica_justificacao, critica_utilizador_nick) "
-                      "VALUES(:id, :data, :pontuacao, :just, :nick);");
-        query.bindValue(":id", currentPK.toInt());
-        query.bindValue(":data", timestamp);
-        query.bindValue(":pontuacao", score);
-        query.bindValue(":just", review);
-        query.bindValue(":nick", currentUser);
-        query.exec();
-
-
-        query.finish();
-
-        return;
-    }
-}
-
-void MainWindow::on_reviewMusicButton_clicked()
-{
-    ReviewDialog dialog(this);
-
-    if (dialog.exec() != QDialog::Accepted){
-
-        QSqlDatabase db = QSqlDatabase::database();
-        QSqlQuery query(db);
-
-        int score = dialog.getScore();
-        QString review = dialog.getReview();
-
-        QDateTime timestamp = *getServerTime();
-
-        query.prepare("INSERT INTO criticamusica(musica_id, critica_data, critica_pontuacao, critica_justificacao, critica_utilizador_nick) "
-                      "VALUES(:id, :data, :pontuacao, :just, :nick);");
-        query.bindValue(":id", currentPK.toInt());
-        query.bindValue(":data", timestamp);
-        query.bindValue(":pontuacao", score);
-        query.bindValue(":just", review);
-        query.bindValue(":nick", currentUser);
-        query.exec();
-
-
-        query.finish();
-
-        return;
-    }
-}
-
 void MainWindow::on_returnButton_clicked()
 {
     stackedWidgetHistoryIndex--;
@@ -478,7 +422,6 @@ void MainWindow::on_returnButton_clicked()
     ui->stackedWidget->setCurrentWidget(stackedWidgetHistory.at(stackedWidgetHistoryIndex));
 
 }
-
 void MainWindow::on_fowardButton_clicked()
 {
     stackedWidgetHistoryIndex++;
@@ -492,17 +435,106 @@ void MainWindow::on_fowardButton_clicked()
     ui->stackedWidget->setCurrentWidget(stackedWidgetHistory.at(stackedWidgetHistoryIndex));
 }
 
-void MainWindow::setCurrentPage(QWidget* page)
+// Main Pages buttons
+void MainWindow::on_newPrivatePlayList_clicked()
 {
-    ui->returnButton->setDisabled(false);
-    ui->fowardButton->setDisabled(true);
-    stackedWidgetHistory = stackedWidgetHistory.mid(0,stackedWidgetHistoryIndex+1);
-    stackedWidgetHistoryIndex++;
-    stackedWidgetHistory.append(page);
-    ui->stackedWidget->setCurrentWidget(page);
+    PlayListEditor *editor = new PlayListEditor(this);
+    connect(editor,SIGNAL(acceptedPlayList()),this,SLOT(addPlayList()));
+    editor->open();
+}
+void MainWindow::on_newPublicPlayList_clicked()
+{
+    on_newPrivatePlayList_clicked();
+}
+void MainWindow::on_editPrivatePlaylist_clicked()
+{
+    ReviewDialog dialog(this);
+
+    if (dialog.exec() != QDialog::Accepted){
+
+
+//        QSqlDatabase db = QSqlDatabase::database();
+//        QSqlQuery query(db);
+
+//        int score = dialog.getScore();
+//        QString review = dialog.getReview();
+
+//        QDateTime timestamp = *getServerTime();
+
+//        query.prepare("INSERT INTO criticamusica(musica_id, critica_data, critica_pontuacao, critica_justificacao, critica_utilizador_nick) "
+//                      "VALUES(:id, :data, :pontuacao, :just, :nick);");
+//        query.bindValue(":id", currentPK.toInt());
+//        query.bindValue(":data", timestamp);
+//        query.bindValue(":pontuacao", score);
+//        query.bindValue(":just", review);
+//        query.bindValue(":nick", currentUser);
+//        query.exec();
+
+
+//        query.finish();
+
+//        return;
+    }
+
+}
+void MainWindow::addPlayList(){
+
+        PlayListEditor* editor = qobject_cast<PlayListEditor*>(this->findChild<QDialog*>("PlayListEditor"));
+
+        QString playlistName = editor->getPlaylistName();
+        QString description = editor->getPlaylistDescription();
+        bool isPrivate = editor->getPlaylistPrivate();
+        QVariantList musicsID = editor->getPlaylistMusics();
+
+        QSqlDatabase db = QSqlDatabase::database();
+        db.transaction();
+        QSqlQuery query(db);
+
+        QDateTime timestamp = *getServerTime();
+        query.prepare("INSERT INTO playlist(nome, data, privado, descricao, utilizador_nick) "
+                      "VALUES(?, ?, ?, ?, ?);");
+        query.addBindValue(playlistName);
+        query.addBindValue(timestamp);
+        query.addBindValue(isPrivate);
+        query.addBindValue(description);
+        query.addBindValue(currentUser);
+        if(!query.exec()){
+            db.rollback();
+            QMessageBox::information(this,"Database Error","Failed to create Playlist!");
+            editor->deleteLater();
+            return;
+        }
+        query.clear();
+        query.prepare("INSERT INTO playlist_musica(playlist_nome, playlist_utilizador_nick, musica_id) "
+                      "VALUES(?, ?, ?);");
+        query.addBindValue(playlistName);
+        query.addBindValue(currentUser);
+        query.addBindValue(musicsID);
+        if(!query.execBatch()){
+            db.rollback();
+            QMessageBox::information(this,"Database Error","Failed to create Playlist!");
+            editor->deleteLater();
+            return;
+        }
+        db.commit();
+        query.finish();
+
+        editor->deleteLater();
+        return;
 
 }
 
+
+void MainWindow::on_chooseMusicButton_clicked()
+{
+    BrowseMusicDialog dialog(this);
+
+    if (dialog.exec() != QDialog::Accepted){
+
+        return;
+    }
+
+}
 void MainWindow::on_musicTableView_clicked(const QModelIndex &index)
 {
     ui->musicTableView->setColumnHidden(0, false);
@@ -556,6 +588,67 @@ void MainWindow::on_musicTableView_clicked(const QModelIndex &index)
 
 }
 
+// SubPages buttons
+void MainWindow::on_reviewAlbumButton_clicked()
+{
+    ReviewDialog dialog(this);
+
+    if (dialog.exec() != QDialog::Accepted){
+
+        QSqlDatabase db = QSqlDatabase::database();
+        QSqlQuery query(db);
+
+        int score = dialog.getScore();
+        QString review = dialog.getReview();
+
+        QDateTime timestamp = *getServerTime();
+
+        query.prepare("INSERT INTO criticaalbum(album_id, critica_data, critica_pontuacao, critica_justificacao, critica_utilizador_nick) "
+                      "VALUES(:id, :data, :pontuacao, :just, :nick);");
+        query.bindValue(":id", currentPK.toInt());
+        query.bindValue(":data", timestamp);
+        query.bindValue(":pontuacao", score);
+        query.bindValue(":just", review);
+        query.bindValue(":nick", currentUser);
+        query.exec();
+
+
+        query.finish();
+
+        return;
+    }
+}
+void MainWindow::on_reviewMusicButton_clicked()
+{
+    ReviewDialog dialog(this);
+
+    if (dialog.exec() != QDialog::Accepted){
+
+        QSqlDatabase db = QSqlDatabase::database();
+        QSqlQuery query(db);
+
+        int score = dialog.getScore();
+        QString review = dialog.getReview();
+
+        QDateTime timestamp = *getServerTime();
+
+        query.prepare("INSERT INTO criticamusica(musica_id, critica_data, critica_pontuacao, critica_justificacao, critica_utilizador_nick) "
+                      "VALUES(:id, :data, :pontuacao, :just, :nick);");
+        query.bindValue(":id", currentPK.toInt());
+        query.bindValue(":data", timestamp);
+        query.bindValue(":pontuacao", score);
+        query.bindValue(":just", review);
+        query.bindValue(":nick", currentUser);
+        query.exec();
+
+
+        query.finish();
+
+        return;
+    }
+}
+
+// Search
 int MainWindow::searchMusic(QStringList keywords){
     QSqlQueryModel* model = qobject_cast<QSqlQueryModel *>(ui->musicTableView->model());
 
@@ -578,7 +671,6 @@ int MainWindow::searchMusic(QStringList keywords){
 
     return model->rowCount();
 }
-
 int MainWindow::searchAlbum(QStringList keywords){
 
     QSqlQueryModel* model = qobject_cast<QSqlQueryModel *>(ui->albumsTableView->model());
@@ -602,7 +694,6 @@ int MainWindow::searchAlbum(QStringList keywords){
 
     return model->rowCount();
 }
-
 int MainWindow::searchInterpreter(QStringList keywords){
     QSqlQueryModel* model = qobject_cast<QSqlQueryModel *>(ui->interpTableView->model());
 
@@ -623,7 +714,6 @@ int MainWindow::searchInterpreter(QStringList keywords){
 
     return model->rowCount();
 }
-
 int MainWindow::searchPlaylist(QStringList keywords){
     QSqlQueryModel* model = qobject_cast<QSqlQueryModel *>(ui->playlistsTableView->model());
 
@@ -644,7 +734,6 @@ int MainWindow::searchPlaylist(QStringList keywords){
 
     return model->rowCount();
 }
-
 int MainWindow::searchConcert(QStringList keywords){
     QSqlQueryModel* model = qobject_cast<QSqlQueryModel *>(ui->concertsTableView->model());
 
@@ -663,7 +752,6 @@ int MainWindow::searchConcert(QStringList keywords){
 
     return model->rowCount();
 }
-
 QSqlQuery *MainWindow::buildSearchQuery(QString searchQuery, QStringList keywords)
 {
     QSqlQuery *query =new QSqlQuery(QSqlDatabase::database());
@@ -675,6 +763,7 @@ QSqlQuery *MainWindow::buildSearchQuery(QString searchQuery, QStringList keyword
     return query;
 }
 
+// Tables
 void MainWindow::configureTableViewLook(QTableView* view){
     view->setSelectionMode(QAbstractItemView::SingleSelection);
     view->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -687,7 +776,6 @@ void MainWindow::configureTableViewLook(QTableView* view){
     view->horizontalHeader()->setCascadingSectionResizes(true);
     view->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
-
 void MainWindow::closeAllViews(){
 
     //Search Views
@@ -732,7 +820,6 @@ void MainWindow::closeAllViews(){
     //Concert Views
     qobject_cast<QSqlQueryModel *>(ui->interpConcertPageTableView->model())->query().finish();
 }
-
 void MainWindow::configureAllSqlTableView(){
 
     //Search Views
@@ -778,25 +865,29 @@ void MainWindow::configureAllSqlTableView(){
     configureTableView(ui->interpConcertPageTableView);
 
 }
-
 void MainWindow::configureTableView(QTableView* view){
     view->setModel(new QSqlQueryModel(view));
     configureTableViewLook(view);
 }
 
-QDateTime* MainWindow::getServerTime(){
+//PlayListEditor
+void MainWindow::refreshPlaylistEditorBrowser(QStringList keywords){
 
-    QSqlDatabase db = QSqlDatabase::database();
-    QSqlQuery query(db);
-    QDateTime *timestamp = new QDateTime;
+    QSqlQuery *query;// = new QSqlQuery(QSqlDatabase::database());
 
-    // Get Timestamp
-    query.prepare("SELECT current_timestamp");
-    query.exec();
-    query.first();
-    *timestamp = query.value(0).toDateTime();
-    query.finish();
-    query.clear();
+    if(keywords.isEmpty()){
 
-    return timestamp;
+        query = new QSqlQuery(QSqlDatabase::database());
+        QString allMusicQuery = musicSearchQuery;
+        allMusicQuery.replace("AND m.nome ~* ?","");
+        query->exec(allMusicQuery);
+
+        PlayListEditor* editor = qobject_cast<PlayListEditor*>(this->findChild<QDialog*>("PlayListEditor"));
+        editor->setAllMusics(query);
+    }
+    else{
+        query = buildSearchQuery(musicSearchQuery,keywords);
+        PlayListEditor* editor = qobject_cast<PlayListEditor*>(this->findChild<QDialog*>("PlayListEditor"));
+        editor->setAllMusics(query);
+    }
 }
