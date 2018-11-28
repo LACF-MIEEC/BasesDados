@@ -90,3 +90,7 @@ int ReviewDialog::getScore(){
 QString ReviewDialog::getReview(){
     return ui->reviewComment->toPlainText();
 }
+
+void ReviewDialog::setMusicAuthor(QString music, QString author){
+    ui->MusicAuthor->setText(music + " - " + author);
+}

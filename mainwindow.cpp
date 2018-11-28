@@ -135,7 +135,6 @@ void MainWindow::loggedIn(QString username){
 
 
     // hide search widgets
-    ui->details->hide();
     ui->interpGroupBox->hide();
     ui->musicsGroupBox->hide();
     ui->albumsGroupBox->hide();
@@ -149,9 +148,9 @@ void MainWindow::loggedIn(QString username){
     currentUser = username;
 
 
-    //////////////////////////////////////////////////////////////////////
-    /// Write Log Register
-    ///
+    // ///////////////////////////////////////////////////////////////////
+    // Write Log Register
+    //
     QSqlDatabase db = QSqlDatabase::database();
     QSqlQuery query(db);
     QDateTime timestamp;
@@ -625,6 +624,8 @@ void MainWindow::on_reviewAlbumButton_clicked()
 {
     ReviewDialog dialog(this);
 
+    dialog.setMusicAuthor(ui->NameImageMusic->text(),ui->authorMusicPage->text());
+
     if (dialog.exec() != QDialog::Accepted){
 
         QSqlDatabase db = QSqlDatabase::database();
@@ -653,6 +654,7 @@ void MainWindow::on_reviewAlbumButton_clicked()
 void MainWindow::on_reviewMusicButton_clicked()
 {
     ReviewDialog dialog(this);
+    dialog.setMusicAuthor(ui->NameImageMusic->text(),ui->authorMusicPage->text());
 
     if (dialog.exec() != QDialog::Accepted){
 
@@ -682,6 +684,7 @@ void MainWindow::on_reviewMusicButton_clicked()
 
 // Search
 int MainWindow::searchMusic(QStringList keywords){
+
     QSqlQueryModel* model = qobject_cast<QSqlQueryModel *>(ui->musicTableView->model());
 
     QSqlQuery *query = buildSearchQuery(musicSearchQuery, keywords);

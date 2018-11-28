@@ -44,6 +44,7 @@ void PlayListEditor::on_buttonBox_2_accepted()
     }
     else{
         QSqlQuery query(QSqlDatabase::database());
+        QSqlRelationalTableModel *playlistModel = qobject_cast<QSqlRelationalTableModel*>(ui->selectedMusics->model());
 
         query.prepare(QString("UPDATE playlist SET descricao = '%1' WHERE nome = '%2' AND utilizador_nick = '%3'").arg(ui->description->toPlainText()).arg(ui->name->text()).arg(currentUser));
         if(!query.exec()){
@@ -54,6 +55,12 @@ void PlayListEditor::on_buttonBox_2_accepted()
         }
         query.prepare(QString("UPDATE playlist SET private = '%1' WHERE nome = '%2' AND utilizador_nick = '%3'").arg(ui->setPrivate->isChecked()).arg(ui->name->text()).arg(currentUser));
         if(!query.exec()){
+            QSqlDatabase::database().rollback();
+            emit failure();
+            this->reject();
+            return;
+        }
+        if(!playlistModel->submitAll()){
             QSqlDatabase::database().rollback();
             emit failure();
             this->reject();

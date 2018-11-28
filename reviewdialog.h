@@ -17,6 +17,8 @@ public:
 
     int getScore();
     QString getReview();
+    void setMusicAuthor(QString music, QString author);
+
 
 private slots:
     void on_Star1_clicked();
