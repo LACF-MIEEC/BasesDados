@@ -166,7 +166,14 @@ void PlayListEditor::configure(){
 
 void PlayListEditor::on_removeMusicButton_clicked()
 {
+    QSqlRelationalTableModel *playlistModel = qobject_cast<QSqlRelationalTableModel*>(ui->selectedMusics->model());
 
+    if(ui->allMusicsTableView->currentIndex().isValid()){
+        //VERIFICAR SE JÁ EXISTE
+        QModelIndex removeIndex = ui->selectedMusics->currentIndex();
+        int row = removeIndex.row() == -1 ? 0 : removeIndex.row();
+        playlistModel->removeRow(row);
+    }
 }
 
 void PlayListEditor::on_addMusicButton_clicked()

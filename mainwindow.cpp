@@ -11,6 +11,7 @@
 #include <QCloseEvent>
 #include <QDateTime>
 #include <QInputDialog>
+#include <QFileDialog>
 
 const QString searchRule ="|";
 
@@ -112,6 +113,9 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     currentUser.clear();
+    currentPK.clear();
+    currentFileMusicID = -1;
+    ui->musicFiles->clear();
     this->setHidden(true);
 
     configureAllSqlTableView();
@@ -280,6 +284,11 @@ void MainWindow::refreshNotifications(){
     qobject_cast<QSqlQueryModel *>(ui->readNotifTableView->model())->setQuery(*query);
 }
 void MainWindow::refreshFiles(){
+
+    currentFileMusicID = -1;
+    ui->musicFiles->clear();
+    ui->pathLineEdit->clear();
+    ui->comment->clear();
     QSqlDatabase db = QSqlDatabase::database();
     QSqlQuery *query = new QSqlQuery(db);
 
@@ -435,7 +444,6 @@ void MainWindow::on_fowardButton_clicked()
     ui->stackedWidget->setCurrentWidget(stackedWidgetHistory.at(stackedWidgetHistoryIndex));
 }
 
-
 //PlayLists
 void MainWindow::on_newPrivatePlayList_clicked()
 {
@@ -467,7 +475,9 @@ void MainWindow::on_newPrivatePlayList_clicked()
     editor->setName(playlistName);
     editor->setUsername(currentUser);
     connect(editor,SIGNAL(searchMusic(QStringList)),this,SLOT(refreshPlaylistEditorBrowser(QStringList)));
-    connect(editor,SIGNAL(failure()),this,SLOT(QMessageBox::information(this,"Database error","Failure creating/editing Playlist!")));
+    connect(editor,SIGNAL(failure()),this,SLOT(databaseFailure()));
+    connect(editor,SIGNAL(accepted()),this,SLOT(playlistCreated()));
+    connect(editor,SIGNAL(rejected()),this,SLOT(cancelPlaylist()));
     editor->configure();
     editor->open();
 }
@@ -477,92 +487,99 @@ void MainWindow::on_newPublicPlayList_clicked()
 }
 void MainWindow::on_editPrivatePlaylist_clicked()
 {
-    ReviewDialog dialog(this);
-
-    if (dialog.exec() != QDialog::Accepted){
-
-
-//        QSqlDatabase db = QSqlDatabase::database();
-//        QSqlQuery query(db);
-
-//        int score = dialog.getScore();
-//        QString review = dialog.getReview();
-
-//        QDateTime timestamp = *getServerTime();
-
-//        query.prepare("INSERT INTO criticamusica(musica_id, critica_data, critica_pontuacao, critica_justificacao, critica_utilizador_nick) "
-//                      "VALUES(:id, :data, :pontuacao, :just, :nick);");
-//        query.bindValue(":id", currentPK.toInt());
-//        query.bindValue(":data", timestamp);
-//        query.bindValue(":pontuacao", score);
-//        query.bindValue(":just", review);
-//        query.bindValue(":nick", currentUser);
-//        query.exec();
-
-
-//        query.finish();
-
-//        return;
-    }
 
 }
-void MainWindow::addPlayList(){
+void MainWindow::on_deletePrivatePlayList_clicked()
+{
+    QString playlistName = ui->privatePlayListTableView->currentIndex().data().toString();
 
-//        PlayListEditor* editor = qobject_cast<PlayListEditor*>(this->findChild<QDialog*>("PlayListEditor"));
+    QMessageBox::StandardButton resBtn = QMessageBox::question(this,"Delete Playlist",QString("Playlist \"%1\" will be deleted!\nAre you sure?").arg(playlistName));
+    if (resBtn != QMessageBox::Yes) {
+        return;
+    }
+    QSqlQuery query(QSqlDatabase::database());
 
-//        QString playlistName = editor->getPlaylistName();
-//        QString description = editor->getPlaylistDescription();
-//        bool isPrivate = editor->getPlaylistPrivate();
-//        QVariantList musicsID = editor->getPlaylistMusics();
 
-//        QSqlDatabase db = QSqlDatabase::database();
-//        db.transaction();
-//        QSqlQuery query(db);
+    query.prepare("DELETE FROM playlist "
+                  "WHERE nome = ? "
+                  "AND utilizador_nick = ?");
+    query.addBindValue(playlistName);
+    query.addBindValue(currentUser);
+    if(query.exec()){
+        QMessageBox::information(this,"Deleted",QString("The playlist \"%1\" was deleted").arg(playlistName));
+        refreshPlaylists();
+        return;
+    }
+    QMessageBox::information(this,"Error",QString("Failed to delete playlist \"%1\"").arg(playlistName));
 
-//        QDateTime timestamp = *getServerTime();
-//        query.prepare("INSERT INTO playlist(nome, data, privado, descricao, utilizador_nick) "
-//                      "VALUES(?, ?, ?, ?, ?);");
-//        query.addBindValue(playlistName);
-//        query.addBindValue(timestamp);
-//        query.addBindValue(isPrivate);
-//        query.addBindValue(description);
-//        query.addBindValue(currentUser);
-//        if(!query.exec()){
-//            db.rollback();
-//            QMessageBox::information(this,"Database Error","Failed to create Playlist!");
-//            editor->deleteLater();
-//            return;
-//        }
-//        query.clear();
-//        query.prepare("INSERT INTO playlist_musica(playlist_nome, playlist_utilizador_nick, musica_id) "
-//                      "VALUES(?, ?, ?);");
-//        query.addBindValue(playlistName);
-//        query.addBindValue(currentUser);
-//        query.addBindValue(musicsID);
-//        if(!query.execBatch()){
-//            db.rollback();
-//            QMessageBox::information(this,"Database Error","Failed to create Playlist!");
-//            editor->deleteLater();
-//            return;
-//        }
-//        db.commit();
-//        query.finish();
+}
+void MainWindow::on_deletePublicPlayList_clicked()
+{
+    QString playlistName = ui->publicPlayListTableView->currentIndex().data().toString();
 
-//        editor->deleteLater();
-//        return;
+    QMessageBox::StandardButton resBtn = QMessageBox::question(this,"Delete Playlist",QString("Playlist \"%1\" will be deleted!\nAre you sure?").arg(playlistName));
+    if (resBtn != QMessageBox::Yes) {
+        return;
+    }
+    QSqlQuery query(QSqlDatabase::database());
 
+
+    query.prepare("DELETE FROM playlist "
+                  "WHERE nome = ? "
+                  "AND utilizador_nick = ?");
+    query.addBindValue(playlistName);
+    query.addBindValue(currentUser);
+    if(query.exec()){
+        QMessageBox::information(this,"Deleted",QString("The playlist \"%1\" was deleted").arg(playlistName));
+        refreshPlaylists();
+        return;
+    }
+    QMessageBox::information(this,"Error",QString("Failed to delete playlist \"%1\"").arg(playlistName));
 }
 
 //Files
 void MainWindow::on_chooseMusicButton_clicked()
 {
-    BrowseMusicDialog dialog(this);
+    BrowseMusicDialog *dialog = new BrowseMusicDialog(this);
+    connect(dialog,SIGNAL(searchMusic(QStringList)),this,SLOT(refreshMusicBrowser(QStringList)));
+    connect(dialog,SIGNAL(accepted()),this,SLOT(musicSelected()));
+    connect(dialog,SIGNAL(rejected()),this,SLOT(cancelMusicSelection()));
+    dialog->open();
+    dialog->showAllMusics();
+}
+void MainWindow::on_browseButton_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Choose Music File"),
+                                                    "/Ambiente de trabalho",
+                                                    tr("Musics (*.mp3 *.mp4 *.wav)"));
 
-    if (dialog.exec() != QDialog::Accepted){
+    ui->pathLineEdit->setText(fileName);
+}
+void MainWindow::on_addFileButton_clicked()
+{
+    if(currentFileMusicID !=-1){
 
-        return;
+
+        QSqlDatabase db = QSqlDatabase::database();
+        QSqlQuery query(db);
+
+        QDateTime timestamp = *getServerTime();
+
+        QFile file(ui->pathLineEdit->text());
+        if (!file.open(QIODevice::ReadOnly)) return;
+        QByteArray blob = file.readAll();
+
+        query.prepare("INSERT INTO ficheiro(dataupload, ficheiro, comentario, utilizador_nick, musica_id) "
+                      "VALUES(?, ?, ?, ?, ?)");
+        query.addBindValue(timestamp);
+        query.addBindValue(blob);
+        query.addBindValue(ui->comment->toPlainText());
+        query.addBindValue(currentUser);
+        query.addBindValue(currentFileMusicID);
+        query.exec();
+        query.finish();
+        refreshFiles();
     }
-
 }
 
 //SearchDetails
@@ -618,7 +635,64 @@ void MainWindow::on_musicTableView_clicked(const QModelIndex &index)
     setCurrentPage(ui->musicPage);
 
 }
+void MainWindow::on_albumsTableView_clicked(const QModelIndex &index)
+{
+    ui->musicTableView->setColumnHidden(0, false);
+    int albumID = ui->musicTableView->model()->itemData(index.siblingAtColumn(0)).value(0,-1).toInt();
+    ui->musicTableView->setColumnHidden(0, true);
+    QSqlDatabase db = QSqlDatabase::database();
+    QSqlQuery query(db);
 
+    // Get Music Data
+    query.prepare("SELECT a.nome, i.nome, g.genero_tipo, to_char(a.datalancamento,'YYYY'), a.editora_nome, a.detalhes "
+                  "FROM musica m, musica_album ma, album a, musica_interprete mi, musica_genero g "
+                  "WHERE m.id = ma.musica_id "
+                  "AND a.id = ma.album_id "
+                  "AND m.id = mi.musica_id "
+                  "AND m.id = g.musica_id "
+                  "AND a.id = ?");
+    query.addBindValue(albumID);
+    query.exec();
+    query.first();
+
+    ui->NameImageAlbum->setText(query.value(0).toString());
+    ui->interpAlbumPage->setText(query.value(1).toString());
+    ui->genreAlbumPage->setText(query.value(2).toString());
+    ui->yearAlbumPage->setText(query.value(3).toString());
+    ui->editorAlbumPage->setText(query.value(4).toString());
+    ui->detailsAlbumPage->setText(query.value(7).toString());
+
+    query.prepare("SELECT m.nome "
+                  "FROM musica m, musica_album ma, album a"
+                  "WHERE m.id = ma.musica_id "
+                  "AND a.id = ma.album_id "
+                  "AND a.id = ?");
+    query.addBindValue(albumID);
+    query.exec();
+
+    QSqlQueryModel* model = qobject_cast<QSqlQueryModel *>(ui->musicsAlbumTableView->model());
+
+    model->setQuery(query);
+    model->setHeaderData(0, Qt::Horizontal, tr("Name"));
+
+    query.prepare("SELECT u.nick, r.critica_pontuacao, r.critica_justificacao "
+                  "FROM utilizador u, criticaalbum r "
+                  "WHERE u.nick = r.critica_utilizador_nick "
+                  "AND album_id = ?");
+    query.addBindValue(albumID);
+    query.exec();
+
+    QSqlQueryModel* model = qobject_cast<QSqlQueryModel *>(ui->reviewsAlbumTableView->model());
+    model->setQuery(query);
+    model->setHeaderData(0, Qt::Horizontal, tr("User"));
+    model->setHeaderData(1, Qt::Horizontal, tr("Score"));
+    model->setHeaderData(2, Qt::Horizontal, tr("Comment"));
+
+
+    currentPK = QVariant(albumID);
+
+    setCurrentPage(ui->musicPage);
+}
 // SubPages buttons
 void MainWindow::on_reviewAlbumButton_clicked()
 {
@@ -648,6 +722,7 @@ void MainWindow::on_reviewAlbumButton_clicked()
 
         query.finish();
 
+        refreshPlaylists();
         return;
     }
 }
@@ -907,14 +982,16 @@ void MainWindow::refreshPlaylistEditorBrowser(QStringList keywords){
 
     QSqlQuery *query;// = new QSqlQuery(QSqlDatabase::database());
     PlayListEditor* editor = qobject_cast<PlayListEditor*>(this->findChild<QDialog*>("PlayListEditor"));
+
+    if(editor == nullptr){
+        return;
+    }
     if(keywords.isEmpty()){
 
         query = new QSqlQuery(QSqlDatabase::database());
         QString allMusicQuery = musicSearchQuery;
         allMusicQuery.replace("AND m.nome ~* ?","");
         query->exec(allMusicQuery);
-
-
         editor->setAllMusics(query);
     }
     else{
@@ -923,3 +1000,56 @@ void MainWindow::refreshPlaylistEditorBrowser(QStringList keywords){
         editor->setAllMusics(query);
     }
 }
+void MainWindow::databaseFailure(){
+    PlayListEditor* editor = qobject_cast<PlayListEditor*>(this->findChild<QDialog*>("PlayListEditor"));
+    editor->deleteLater();
+    QMessageBox::information(this,"Database error","Failure creating/editing Playlist!");
+}
+void MainWindow::playlistCreated(){
+    PlayListEditor* editor = qobject_cast<PlayListEditor*>(this->findChild<QDialog*>("PlayListEditor"));
+    editor->deleteLater();
+    QMessageBox::information(this,"Success!","Playlist created succesfuly!");
+    refreshPlaylists();
+}
+void MainWindow::cancelPlaylist(){
+    PlayListEditor* editor = qobject_cast<PlayListEditor*>(this->findChild<QDialog*>("PlayListEditor"));
+    editor->deleteLater();
+}
+
+//Music Browser
+void MainWindow::refreshMusicBrowser(QStringList keywords){
+    QSqlQuery *query;// = new QSqlQuery(QSqlDatabase::database());
+    BrowseMusicDialog* browser = qobject_cast<BrowseMusicDialog*>(this->findChild<QDialog*>("BrowseMusicDialog"));
+
+    if(browser == nullptr){
+        return;
+    }
+    if(keywords.isEmpty()){
+
+        query = new QSqlQuery(QSqlDatabase::database());
+        QString allMusicQuery = musicSearchQuery;
+        allMusicQuery.replace("AND m.nome ~* ?","");
+        query->exec(allMusicQuery);
+        browser->setMusics(query);
+    }
+    else{
+        query = buildSearchQuery(musicSearchQuery,keywords);
+        query->exec();
+        browser->setMusics(query);
+    }
+}
+void MainWindow::cancelMusicSelection(){
+    BrowseMusicDialog* browser = qobject_cast<BrowseMusicDialog*>(this->findChild<QDialog*>("BrowseMusicDialog"));
+    browser->deleteLater();
+}
+void MainWindow::musicSelected(){
+
+    BrowseMusicDialog* browser = qobject_cast<BrowseMusicDialog*>(this->findChild<QDialog*>("BrowseMusicDialog"));
+
+    ui->musicFiles->setText(browser->getSelectedName() + " - " + browser->getSelectedInterpreter());
+    currentFileMusicID = browser->getSelectedID();
+    browser->deleteLater();
+}
+
+
+

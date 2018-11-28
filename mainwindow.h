@@ -22,6 +22,7 @@ private:
 
     QString currentUser;
     QVariant currentPK;
+    int currentFileMusicID;
 
     QList<QWidget*> stackedWidgetHistory;
     int stackedWidgetHistoryIndex;
@@ -37,6 +38,14 @@ private slots:
 
     QDateTime* getServerTime();
 
+    void databaseFailure();
+    void playlistCreated();
+    void cancelPlaylist();
+    void refreshPlaylistEditorBrowser(QStringList keywords);
+
+    void refreshMusicBrowser(QStringList keywords);
+    void cancelMusicSelection();
+    void musicSelected();
 
     int searchMusic(QStringList keywords);
     int searchAlbum(QStringList keywords);
@@ -50,8 +59,7 @@ private slots:
     void closeAllViews();
     void configureAllSqlTableView();
 
-    void refreshPlaylistEditorBrowser(QStringList keywords);
-    void addPlayList();
+
 
     void on_homeButton_clicked();
     void on_filesButton_clicked();
@@ -68,6 +76,11 @@ private slots:
     void on_reviewMusicButton_clicked();
     void on_newPublicPlayList_clicked();
     void on_editPrivatePlaylist_clicked();
+    void on_deletePrivatePlayList_clicked();
+    void on_deletePublicPlayList_clicked();
+    void on_browseButton_clicked();
+    void on_addFileButton_clicked();
+    void on_albumsTableView_clicked(const QModelIndex &index);
 };
 
 #endif // MAINWINDOW_H
