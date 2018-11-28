@@ -10,6 +10,7 @@
 #include <QMessageBox>
 #include <QCloseEvent>
 #include <QDateTime>
+#include <QInputDialog>
 
 const QString searchRule ="|";
 
@@ -435,11 +436,40 @@ void MainWindow::on_fowardButton_clicked()
     ui->stackedWidget->setCurrentWidget(stackedWidgetHistory.at(stackedWidgetHistoryIndex));
 }
 
-// Main Pages buttons
+
+//PlayLists
 void MainWindow::on_newPrivatePlayList_clicked()
 {
+    bool ok;
+    QString playlistName = QInputDialog::getText(this,"New Playlist!","Playlist Name:",QLineEdit::Normal,"",&ok,Qt::SplashScreen);
+
+    if(ok && !playlistName.isEmpty()){
+        QSqlDatabase db = QSqlDatabase::database();
+        QSqlQuery query(db);
+        query.prepare(QString("SELECT count(*) FROM playlist WHERE nome = '%1' AND utilizador_nick = '%2'").arg(playlistName).arg(currentUser));
+        query.exec();
+        query.first();
+        if(query.value(0).toInt() != 0){
+            QMessageBox::information(this, tr("Already Taken"),
+                                     tr("You already have a playlist with that name!\nPlease choose another!"));
+            query.finish();
+            query.clear();
+            return;
+        }
+    }
+    else if(ok){
+        QMessageBox::information(this,"Name Required","You must provide a name to the playlist!");
+        return;
+    }
+    else
+        return;
+
     PlayListEditor *editor = new PlayListEditor(this);
-    connect(editor,SIGNAL(acceptedPlayList()),this,SLOT(addPlayList()));
+    editor->setName(playlistName);
+    editor->setUsername(currentUser);
+    connect(editor,SIGNAL(searchMusic(QStringList)),this,SLOT(refreshPlaylistEditorBrowser(QStringList)));
+    connect(editor,SIGNAL(failure()),this,SLOT(QMessageBox::information(this,"Database error","Failure creating/editing Playlist!")));
+    editor->configure();
     editor->open();
 }
 void MainWindow::on_newPublicPlayList_clicked()
@@ -479,52 +509,52 @@ void MainWindow::on_editPrivatePlaylist_clicked()
 }
 void MainWindow::addPlayList(){
 
-        PlayListEditor* editor = qobject_cast<PlayListEditor*>(this->findChild<QDialog*>("PlayListEditor"));
+//        PlayListEditor* editor = qobject_cast<PlayListEditor*>(this->findChild<QDialog*>("PlayListEditor"));
 
-        QString playlistName = editor->getPlaylistName();
-        QString description = editor->getPlaylistDescription();
-        bool isPrivate = editor->getPlaylistPrivate();
-        QVariantList musicsID = editor->getPlaylistMusics();
+//        QString playlistName = editor->getPlaylistName();
+//        QString description = editor->getPlaylistDescription();
+//        bool isPrivate = editor->getPlaylistPrivate();
+//        QVariantList musicsID = editor->getPlaylistMusics();
 
-        QSqlDatabase db = QSqlDatabase::database();
-        db.transaction();
-        QSqlQuery query(db);
+//        QSqlDatabase db = QSqlDatabase::database();
+//        db.transaction();
+//        QSqlQuery query(db);
 
-        QDateTime timestamp = *getServerTime();
-        query.prepare("INSERT INTO playlist(nome, data, privado, descricao, utilizador_nick) "
-                      "VALUES(?, ?, ?, ?, ?);");
-        query.addBindValue(playlistName);
-        query.addBindValue(timestamp);
-        query.addBindValue(isPrivate);
-        query.addBindValue(description);
-        query.addBindValue(currentUser);
-        if(!query.exec()){
-            db.rollback();
-            QMessageBox::information(this,"Database Error","Failed to create Playlist!");
-            editor->deleteLater();
-            return;
-        }
-        query.clear();
-        query.prepare("INSERT INTO playlist_musica(playlist_nome, playlist_utilizador_nick, musica_id) "
-                      "VALUES(?, ?, ?);");
-        query.addBindValue(playlistName);
-        query.addBindValue(currentUser);
-        query.addBindValue(musicsID);
-        if(!query.execBatch()){
-            db.rollback();
-            QMessageBox::information(this,"Database Error","Failed to create Playlist!");
-            editor->deleteLater();
-            return;
-        }
-        db.commit();
-        query.finish();
+//        QDateTime timestamp = *getServerTime();
+//        query.prepare("INSERT INTO playlist(nome, data, privado, descricao, utilizador_nick) "
+//                      "VALUES(?, ?, ?, ?, ?);");
+//        query.addBindValue(playlistName);
+//        query.addBindValue(timestamp);
+//        query.addBindValue(isPrivate);
+//        query.addBindValue(description);
+//        query.addBindValue(currentUser);
+//        if(!query.exec()){
+//            db.rollback();
+//            QMessageBox::information(this,"Database Error","Failed to create Playlist!");
+//            editor->deleteLater();
+//            return;
+//        }
+//        query.clear();
+//        query.prepare("INSERT INTO playlist_musica(playlist_nome, playlist_utilizador_nick, musica_id) "
+//                      "VALUES(?, ?, ?);");
+//        query.addBindValue(playlistName);
+//        query.addBindValue(currentUser);
+//        query.addBindValue(musicsID);
+//        if(!query.execBatch()){
+//            db.rollback();
+//            QMessageBox::information(this,"Database Error","Failed to create Playlist!");
+//            editor->deleteLater();
+//            return;
+//        }
+//        db.commit();
+//        query.finish();
 
-        editor->deleteLater();
-        return;
+//        editor->deleteLater();
+//        return;
 
 }
 
-
+//Files
 void MainWindow::on_chooseMusicButton_clicked()
 {
     BrowseMusicDialog dialog(this);
@@ -535,6 +565,8 @@ void MainWindow::on_chooseMusicButton_clicked()
     }
 
 }
+
+//SearchDetails
 void MainWindow::on_musicTableView_clicked(const QModelIndex &index)
 {
     ui->musicTableView->setColumnHidden(0, false);
@@ -764,18 +796,6 @@ QSqlQuery *MainWindow::buildSearchQuery(QString searchQuery, QStringList keyword
 }
 
 // Tables
-void MainWindow::configureTableViewLook(QTableView* view){
-    view->setSelectionMode(QAbstractItemView::SingleSelection);
-    view->setSelectionBehavior(QAbstractItemView::SelectRows);
-    view->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    view->setShowGrid(false);
-    view->setGridStyle(Qt::NoPen);
-    view->setSortingEnabled(false);
-    view->verticalHeader()->setVisible(false);
-    view->horizontalHeader()->setCascadingSectionResizes(true);
-    view->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-}
 void MainWindow::closeAllViews(){
 
     //Search Views
@@ -867,14 +887,23 @@ void MainWindow::configureAllSqlTableView(){
 }
 void MainWindow::configureTableView(QTableView* view){
     view->setModel(new QSqlQueryModel(view));
-    configureTableViewLook(view);
+    view->setSelectionMode(QAbstractItemView::SingleSelection);
+    view->setSelectionBehavior(QAbstractItemView::SelectRows);
+    view->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    view->setShowGrid(false);
+    view->setGridStyle(Qt::NoPen);
+    view->setSortingEnabled(false);
+    view->verticalHeader()->setVisible(false);
+    view->horizontalHeader()->setCascadingSectionResizes(true);
+    view->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
 //PlayListEditor
 void MainWindow::refreshPlaylistEditorBrowser(QStringList keywords){
 
     QSqlQuery *query;// = new QSqlQuery(QSqlDatabase::database());
-
+    PlayListEditor* editor = qobject_cast<PlayListEditor*>(this->findChild<QDialog*>("PlayListEditor"));
     if(keywords.isEmpty()){
 
         query = new QSqlQuery(QSqlDatabase::database());
@@ -882,12 +911,12 @@ void MainWindow::refreshPlaylistEditorBrowser(QStringList keywords){
         allMusicQuery.replace("AND m.nome ~* ?","");
         query->exec(allMusicQuery);
 
-        PlayListEditor* editor = qobject_cast<PlayListEditor*>(this->findChild<QDialog*>("PlayListEditor"));
+
         editor->setAllMusics(query);
     }
     else{
         query = buildSearchQuery(musicSearchQuery,keywords);
-        PlayListEditor* editor = qobject_cast<PlayListEditor*>(this->findChild<QDialog*>("PlayListEditor"));
+        query->exec();
         editor->setAllMusics(query);
     }
 }

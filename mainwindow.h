@@ -47,7 +47,6 @@ private slots:
 
 
     void configureTableView(QTableView* view);
-    void configureTableViewLook(QTableView* view);
     void closeAllViews();
     void configureAllSqlTableView();
 

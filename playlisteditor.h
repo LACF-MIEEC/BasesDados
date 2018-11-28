@@ -15,25 +15,33 @@ public:
     explicit PlayListEditor(QWidget *parent = nullptr);
     ~PlayListEditor();
 
-    QString getPlaylistName();
-    QString getPlaylistDescription();
-    QVariantList getPlaylistMusics();
-    bool getPlaylistPrivate();
-
     void setAllMusics(QSqlQuery * query);
-    void setDatabaseMusics(QVariantList musicList);
+    void setName(QString name);
+    void setUsername(QString username){currentUser=username;}
+    void configure();
 
 signals:
-    void acceptedPlayList();
+    void searchMusic(QStringList);
+    void failure();
 
 private slots:
     void on_buttonBox_2_accepted();
 
     void on_buttonBox_2_rejected();
 
+    void configureSelectedMusics();
+
+    void on_searchButton_clicked();
+
+    void on_searchLine_returnPressed();
+
+    void on_removeMusicButton_clicked();
+
+    void on_addMusicButton_clicked();
+
 private:
     Ui::PlayListEditor *ui;
-    QList<int> selectedMusicsID;
+    QString currentUser;
 };
 
 #endif // PLAYLISTEDITOR_H
