@@ -21,6 +21,7 @@ private:
     Ui::MainWindow *ui;
 
     QString currentUser;
+    QVariant currentPK;
 
     QList<QWidget*> stackedWidgetHistory;
     int stackedWidgetHistoryIndex;
@@ -28,18 +29,25 @@ private:
 private slots:
     void loggedIn(QString);
     void closeEvent(QCloseEvent *event);
-    void refreshAll();
     void refreshUserPanel();
+    void refreshNotifications();
+    void refreshFiles();
+    void refreshPlaylists();
+
+    QDateTime* getServerTime();
+
 
     int searchMusic(QStringList keywords);
     int searchAlbum(QStringList keywords);
     int searchPlaylist(QStringList keywords);
     int searchConcert(QStringList keywords);
     int searchInterpreter(QStringList keywords);
-
     QSqlQuery* buildSearchQuery(QString searchQuery, QStringList keywords);
 
-    QSqlRelationalTableModel* configureSqlRelationalTableView(QTableView *view, QString table, QList<bool> *hiden = nullptr, QList<QStringList> *relations = nullptr);
+
+    void configureTableView(QTableView* view);
+    void configureTableViewLook(QTableView* view);
+    void closeAllViews();
     void configureAllSqlTableView();
 
 
@@ -55,6 +63,7 @@ private slots:
     void setCurrentPage(QWidget* page);
     void on_fowardButton_clicked();
     void on_musicTableView_clicked(const QModelIndex &index);
+    void on_reviewMusicButton_clicked();
 };
 
 #endif // MAINWINDOW_H

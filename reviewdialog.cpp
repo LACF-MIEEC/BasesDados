@@ -26,7 +26,7 @@ void ReviewDialog::on_Star1_clicked()
     ui->Star4->setChecked(false);
     ui->Star5->setChecked(false);
 
-    rating = 1;
+    score = 1;
 }
 
 void ReviewDialog::on_Star2_clicked()
@@ -37,7 +37,7 @@ void ReviewDialog::on_Star2_clicked()
     ui->Star4->setChecked(false);
     ui->Star5->setChecked(false);
 
-    rating = 2;
+    score = 2;
 }
 
 void ReviewDialog::on_Star3_clicked()
@@ -48,7 +48,7 @@ void ReviewDialog::on_Star3_clicked()
     ui->Star4->setChecked(false);
     ui->Star5->setChecked(false);
 
-    rating = 3;
+    score = 3;
 }
 
 void ReviewDialog::on_Star4_clicked()
@@ -59,7 +59,7 @@ void ReviewDialog::on_Star4_clicked()
     ui->Star4->setChecked(true);
     ui->Star5->setChecked(false);
 
-    rating = 4;
+    score = 4;
 }
 
 void ReviewDialog::on_Star5_clicked()
@@ -70,5 +70,23 @@ void ReviewDialog::on_Star5_clicked()
     ui->Star4->setChecked(true);
     ui->Star5->setChecked(true);
 
-    rating = 5;
+    score = 5;
+}
+
+void ReviewDialog::on_buttonBox_accepted()
+{
+    this->accept();
+}
+
+void ReviewDialog::on_buttonBox_rejected()
+{
+    this->reject();
+}
+
+int ReviewDialog::getScore(){
+    return score;
+}
+
+QString ReviewDialog::getReview(){
+    return ui->reviewComment->toPlainText();
 }

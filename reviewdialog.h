@@ -15,6 +15,9 @@ public:
     explicit ReviewDialog(QWidget *parent = nullptr);
     ~ReviewDialog();
 
+    int getScore();
+    QString getReview();
+
 private slots:
     void on_Star1_clicked();
     void on_Star2_clicked();
@@ -22,9 +25,13 @@ private slots:
     void on_Star4_clicked();
     void on_Star5_clicked();
 
+    void on_buttonBox_accepted();
+
+    void on_buttonBox_rejected();
+
 private:
     Ui::ReviewDialog *ui;
-    int rating;
+    int score;
 };
 
 #endif // REVIEWDIALOG_H
