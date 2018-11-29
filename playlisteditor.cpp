@@ -142,7 +142,6 @@ void PlayListEditor::configure(){
     query.prepare("INSERT INTO playlist(nome, data, private, descricao, utilizador_nick) "
                   "VALUES(?, (select current_timestamp), ?, ?, ?)");
     query.addBindValue(ui->name->text());
-    query.addBindValue(timestamp);
     query.addBindValue(ui->setPrivate->isChecked());
     query.addBindValue(ui->description->toPlainText());
     query.addBindValue(currentUser);

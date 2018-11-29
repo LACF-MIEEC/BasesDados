@@ -717,7 +717,6 @@ void MainWindow::on_reviewMusicButton_clicked()
         query.prepare("INSERT INTO criticamusica(musica_id, critica_data, critica_pontuacao, critica_justificacao, critica_utilizador_nick) "
                       "VALUES(:id, (select current_timestamp), :pontuacao, :just, :nick);");
         query.bindValue(":id", currentPK.toInt());
-        query.bindValue(":data", timestamp);
         query.bindValue(":pontuacao", score);
         query.bindValue(":just", review);
         query.bindValue(":nick", currentUser);
