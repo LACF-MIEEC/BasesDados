@@ -157,12 +157,8 @@ void MainWindow::loggedIn(QString username){
     //
     QSqlDatabase db = QSqlDatabase::database();
     QSqlQuery query(db);
-    QDateTime timestamp;
-    timestamp = *getServerTime();
-    qDebug() << "Login Date: " << timestamp;
 
-    if(query.prepare("INSERT INTO registoacesso (data, tipoacesso, utilizador_nick) VALUES (:data, :tipoacesso, :utilizador_nick)")){
-        query.bindValue(":data", timestamp);
+    if(query.prepare("INSERT INTO registoacesso (data, tipoacesso, utilizador_nick) VALUES ((select current_timestamp), :tipoacesso, :utilizador_nick)")){
         query.bindValue(":tipoacesso", "LogIn");
         query.bindValue(":utilizador_nick", username);
 
@@ -194,12 +190,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
             {
                 QSqlDatabase db = QSqlDatabase::database();
                 QSqlQuery query(db);
-                QDateTime timestamp;
-                timestamp = *getServerTime();
-                qDebug() << "Logoff Date: " << timestamp;
 
-                if(query.prepare("INSERT INTO registoacesso (data, tipoacesso, utilizador_nick) VALUES (:data, :tipoacesso, :utilizador_nick)")){
-                    query.bindValue(":data", timestamp);
+                if(query.prepare("INSERT INTO registoacesso (data, tipoacesso, utilizador_nick) VALUES ((select current_timestamp), :tipoacesso, :utilizador_nick)")){
                     query.bindValue(":tipoacesso", "LogOff");
                     query.bindValue(":utilizador_nick", currentUser);
 
@@ -355,23 +347,6 @@ void MainWindow::setCurrentPage(QWidget* page)
     stackedWidgetHistory.append(page);
     ui->stackedWidget->setCurrentWidget(page);
 
-}
-// Server Time
-QDateTime* MainWindow::getServerTime(){
-
-    QSqlDatabase db = QSqlDatabase::database();
-    QSqlQuery query(db);
-    QDateTime *timestamp = new QDateTime;
-
-    // Get Timestamp
-    query.prepare("SELECT current_timestamp");
-    query.exec();
-    query.first();
-    *timestamp = query.value(0).toDateTime();
-    query.finish();
-    query.clear();
-
-    return timestamp;
 }
 
 //Main Pages
@@ -563,15 +538,12 @@ void MainWindow::on_addFileButton_clicked()
         QSqlDatabase db = QSqlDatabase::database();
         QSqlQuery query(db);
 
-        QDateTime timestamp = *getServerTime();
-
         QFile file(ui->pathLineEdit->text());
         if (!file.open(QIODevice::ReadOnly)) return;
         QByteArray blob = file.readAll();
 
         query.prepare("INSERT INTO ficheiro(dataupload, ficheiro, comentario, utilizador_nick, musica_id) "
-                      "VALUES(?, ?, ?, ?, ?)");
-        query.addBindValue(timestamp);
+                      "VALUES((select current_timestamp), ?, ?, ?, ?)");
         query.addBindValue(blob);
         query.addBindValue(ui->comment->toPlainText());
         query.addBindValue(currentUser);
@@ -644,7 +616,7 @@ void MainWindow::on_albumsTableView_clicked(const QModelIndex &index)
     QSqlQuery query(db);
 
     // Get Music Data
-    query.prepare("SELECT a.nome, i.nome, g.genero_tipo, to_char(a.datalancamento,'YYYY'), a.editora_nome, a.detalhes "
+    query.prepare("SELECT a.nome, mi.interprete_nome, g.genero_tipo, to_char(a.datalancamento,'YYYY'), a.editora_nome, a.detalhes "
                   "FROM musica m, musica_album ma, album a, musica_interprete mi, musica_genero g "
                   "WHERE m.id = ma.musica_id "
                   "AND a.id = ma.album_id "
@@ -660,10 +632,10 @@ void MainWindow::on_albumsTableView_clicked(const QModelIndex &index)
     ui->genreAlbumPage->setText(query.value(2).toString());
     ui->yearAlbumPage->setText(query.value(3).toString());
     ui->editorAlbumPage->setText(query.value(4).toString());
-    ui->detailsAlbumPage->setText(query.value(7).toString());
+    ui->detailsAlbumPage->setText(query.value(5).toString());
 
-    query.prepare("SELECT m.nome "
-                  "FROM musica m, musica_album ma, album a"
+    query.prepare("SELECT m.nome, to_char(m.duracao,'hh:mm:ss') "
+                  "FROM musica m, musica_album ma, album a "
                   "WHERE m.id = ma.musica_id "
                   "AND a.id = ma.album_id "
                   "AND a.id = ?");
@@ -674,25 +646,30 @@ void MainWindow::on_albumsTableView_clicked(const QModelIndex &index)
 
     model->setQuery(query);
     model->setHeaderData(0, Qt::Horizontal, tr("Name"));
+    model->setHeaderData(0, Qt::Horizontal, tr("Duration"));
 
-    query.prepare("SELECT u.nick, r.critica_pontuacao, r.critica_justificacao "
+    QSqlQuery query2(db);
+
+    query2.prepare("SELECT u.nick, r.critica_pontuacao, r.critica_justificacao "
                   "FROM utilizador u, criticaalbum r "
                   "WHERE u.nick = r.critica_utilizador_nick "
                   "AND album_id = ?");
-    query.addBindValue(albumID);
-    query.exec();
+    query2.addBindValue(albumID);
+    query2.exec();
 
-    QSqlQueryModel* model = qobject_cast<QSqlQueryModel *>(ui->reviewsAlbumTableView->model());
-    model->setQuery(query);
-    model->setHeaderData(0, Qt::Horizontal, tr("User"));
-    model->setHeaderData(1, Qt::Horizontal, tr("Score"));
-    model->setHeaderData(2, Qt::Horizontal, tr("Comment"));
+    QSqlQueryModel* model2 = qobject_cast<QSqlQueryModel *>(ui->reviewsAlbumTableView->model());
+
+    model2->setQuery(query2);
+    model2->setHeaderData(0, Qt::Horizontal, tr("User"));
+    model2->setHeaderData(1, Qt::Horizontal, tr("Score"));
+    model2->setHeaderData(2, Qt::Horizontal, tr("Comment"));
 
 
     currentPK = QVariant(albumID);
 
-    setCurrentPage(ui->musicPage);
+    setCurrentPage(ui->albumPage);
 }
+
 // SubPages buttons
 void MainWindow::on_reviewAlbumButton_clicked()
 {
@@ -708,12 +685,10 @@ void MainWindow::on_reviewAlbumButton_clicked()
         int score = dialog.getScore();
         QString review = dialog.getReview();
 
-        QDateTime timestamp = *getServerTime();
 
         query.prepare("INSERT INTO criticaalbum(album_id, critica_data, critica_pontuacao, critica_justificacao, critica_utilizador_nick) "
-                      "VALUES(:id, :data, :pontuacao, :just, :nick);");
+                      "VALUES(:id, (select current_timestamp), :pontuacao, :just, :nick);");
         query.bindValue(":id", currentPK.toInt());
-        query.bindValue(":data", timestamp);
         query.bindValue(":pontuacao", score);
         query.bindValue(":just", review);
         query.bindValue(":nick", currentUser);
@@ -739,10 +714,8 @@ void MainWindow::on_reviewMusicButton_clicked()
         int score = dialog.getScore();
         QString review = dialog.getReview();
 
-        QDateTime timestamp = *getServerTime();
-
         query.prepare("INSERT INTO criticamusica(musica_id, critica_data, critica_pontuacao, critica_justificacao, critica_utilizador_nick) "
-                      "VALUES(:id, :data, :pontuacao, :just, :nick);");
+                      "VALUES(:id, (select current_timestamp), :pontuacao, :just, :nick);");
         query.bindValue(":id", currentPK.toInt());
         query.bindValue(":data", timestamp);
         query.bindValue(":pontuacao", score);

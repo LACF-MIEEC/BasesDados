@@ -138,18 +138,9 @@ void PlayListEditor::configure(){
     emit searchMusic(QStringList());
 
     QSqlQuery query(QSqlDatabase::database());
-    QDateTime timestamp;
-
-    // Get Timestamp
-    query.prepare("SELECT current_timestamp");
-    query.exec();
-    query.first();
-    timestamp = query.value(0).toDateTime();
-    query.finish();
-    query.clear();
 
     query.prepare("INSERT INTO playlist(nome, data, private, descricao, utilizador_nick) "
-                  "VALUES(?, ?, ?, ?, ?)");
+                  "VALUES(?, (select current_timestamp), ?, ?, ?)");
     query.addBindValue(ui->name->text());
     query.addBindValue(timestamp);
     query.addBindValue(ui->setPrivate->isChecked());

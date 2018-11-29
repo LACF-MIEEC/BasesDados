@@ -309,7 +309,7 @@ QScrollBar::sub-line {
     <item row="5" column="1">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>5</number>
+       <number>7</number>
       </property>
       <widget class="QWidget" name="homePage">
        <layout class="QGridLayout" name="gridLayout_2">
@@ -587,8 +587,8 @@ QScrollBar::sub-line {
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>280</width>
-                <height>203</height>
+                <width>98</width>
+                <height>79</height>
                </rect>
               </property>
               <layout class="QGridLayout" name="gridLayout_6">
@@ -734,8 +734,8 @@ QScrollBar::sub-line {
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>565</width>
-                <height>695</height>
+                <width>98</width>
+                <height>218</height>
                </rect>
               </property>
               <layout class="QGridLayout" name="gridLayout_5">
@@ -835,8 +835,8 @@ QScrollBar::sub-line {
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>274</width>
-                <height>705</height>
+                <width>98</width>
+                <height>70</height>
                </rect>
               </property>
               <layout class="QGridLayout" name="gridLayout_15">
@@ -1118,8 +1118,8 @@ QScrollBar::sub-line {
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>273</width>
-                <height>705</height>
+                <width>98</width>
+                <height>70</height>
                </rect>
               </property>
               <layout class="QGridLayout" name="gridLayout_14">
@@ -1246,8 +1246,8 @@ QScrollBar::sub-line {
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>889</width>
-               <height>736</height>
+               <width>264</width>
+               <height>613</height>
               </rect>
              </property>
              <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -1726,8 +1726,8 @@ QScrollBar::sub-line {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>569</width>
-                   <height>310</height>
+                   <width>98</width>
+                   <height>83</height>
                   </rect>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_28">
@@ -1880,8 +1880,8 @@ QScrollBar::sub-line {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>569</width>
-                   <height>307</height>
+                   <width>98</width>
+                   <height>83</height>
                   </rect>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_29">
@@ -2075,8 +2075,8 @@ QScrollBar::sub-line {
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>274</width>
-                <height>685</height>
+                <width>98</width>
+                <height>83</height>
                </rect>
               </property>
               <layout class="QGridLayout" name="gridLayout_25">
@@ -2092,7 +2092,7 @@ QScrollBar::sub-line {
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="InterpPage">
+      <widget class="QWidget" name="interpPage">
        <layout class="QGridLayout" name="gridLayout_23">
         <item row="2" column="1">
          <spacer name="verticalSpacer_9">
@@ -2124,7 +2124,7 @@ QScrollBar::sub-line {
              <x>0</x>
              <y>0</y>
              <width>870</width>
-             <height>1093</height>
+             <height>1138</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_19">
@@ -2369,7 +2369,7 @@ QScrollBar::sub-line {
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="AlbumPage">
+      <widget class="QWidget" name="albumPage">
        <layout class="QGridLayout" name="gridLayout_39">
         <item row="1" column="0">
          <spacer name="verticalSpacer_13">
@@ -2399,7 +2399,7 @@ QScrollBar::sub-line {
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>-173</y>
+             <y>0</y>
              <width>870</width>
              <height>881</height>
             </rect>
@@ -2671,7 +2671,7 @@ QScrollBar::sub-line {
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="PlayListPage">
+      <widget class="QWidget" name="playListPage">
        <layout class="QGridLayout" name="gridLayout_44">
         <item row="0" column="0">
          <widget class="QScrollArea" name="scrollArea_13">
@@ -3221,8 +3221,8 @@ Fuck you!</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>875</width>
-             <height>708</height>
+             <width>368</width>
+             <height>747</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_23">
@@ -3424,8 +3424,8 @@ Fuck you!</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>875</width>
-             <height>708</height>
+             <width>324</width>
+             <height>735</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_24">

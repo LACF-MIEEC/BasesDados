@@ -36,8 +36,6 @@ private slots:
     void refreshFiles();
     void refreshPlaylists();
 
-    QDateTime* getServerTime();
-
     void databaseFailure();
     void playlistCreated();
     void cancelPlaylist();

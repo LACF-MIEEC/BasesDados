@@ -255,18 +255,10 @@ void StartWindow::on_RegButtonBox_accepted()
     QString bio = ui->bio->toPlainText();
     QString country = ui->country->currentText();
     QDate birthDate = ui->birthDate->date();
-    QDateTime sysdate;
 
-    // Get timestamp
-    query.prepare("SELECT current_timestamp");
-    query.exec();
-    query.first();
-    sysdate = query.value(0).toDateTime();
-    query.finish();
-    query.clear();
 
     if(query.prepare("INSERT INTO utilizador (nick, password, primeironome, ultimonome, email, gestor, mailconfirmado, datanascimento, bio, pais, dataregisto)"
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")){
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, (select current_timestamp))")){
         query.addBindValue(nickname);
         query.addBindValue(password);
         query.addBindValue(firstname);
@@ -277,7 +269,6 @@ void StartWindow::on_RegButtonBox_accepted()
         query.addBindValue(birthDate);
         query.addBindValue(bio);
         query.addBindValue(country);
-        query.addBindValue(sysdate);
         if(!query.exec()){
             qDebug() << "ERROR: " << query.lastError();
             QMessageBox::warning(this, tr("Error"),
